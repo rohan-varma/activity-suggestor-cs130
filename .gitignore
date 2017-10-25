@@ -1,0 +1,16 @@
+# temporary files
+~$*
+*.swo
+*.swp
+*.tmp
+OneNote_RecycleBin/
+
+# other managed, replaceable files
+#TODO| make sure you won't end up ignoring files that shouldn't be
+.vs/
+.vscode/
+*.tlog/
+*.sdf
+*.suo
+*.o # ELF object files
+*.class # java class files
