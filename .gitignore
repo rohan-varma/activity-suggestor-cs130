@@ -1,8 +1,8 @@
 ~$*
-*~
-*.swo
-*.swp
-*.tmp
+/**/*~
+/**/*.swo
+/**/*.swp
+/**/*.tmp
 
 .DS_Store
 .vs
@@ -10,6 +10,6 @@
 #db.sqlite3 # temp db
 myvenv
 __pycache__
-*.pyc # python bytecode
-*.o # ELF object files
-*.class # java class files
+/**/*.pyc
+/**/*.o
+/**/*.class
