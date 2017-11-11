@@ -55,7 +55,7 @@ These would be accessed directly from the root domain (e.g. `https://mysite/`).
 
 ### places service
 
-URLs for accessing the places backend should look like `https://api.mysite/suggest?location=<lat>,<long>&category=<...>&...`
+URLs for accessing the places backend should look like `https://mysite/api/suggest?location=<lat>,<long>&category=<...>&...`
 
 ... returns JSON containing a list of suggested places
 
