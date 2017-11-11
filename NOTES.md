@@ -29,10 +29,10 @@ Folder structure
 | ---- | ----------- |
 | `manage.py` | management script |
 | `mysite/` | django root directory (this is like a "main" (entry point) function) |
-| `mysite/static/`, <br />`mysite/templates/` | shared assets |
+| `mysite/static/`, <br />`mysite/templates/` | main UI + shared assets |
 | `apps/` | "apps" (subcomponents) |
 | `apps/.../static/`, <br />`apps/.../templates/` | app-specific assets |
-| `apps/suggestor/` | the main location suggestor "module" (frontend + backend) |
+| `apps/suggestor/` | the main location suggestor backend |
 | `apps/profiles/` | (optional) user profile handling (user "feed", account settings, etc.) |
 
 
@@ -52,10 +52,6 @@ These would be accessed directly from the root domain (e.g. `https://mysite/`).
 
 *It seems like a good idea to have a separate URL with query strings for the results page, since otherwise it would be impossible to, say, bookmark the results page (instead of having to enter your location, like, every single time). These would be handled by the client javascript. -John*
 
-https://stackoverflow.com/questions/901115/how-can-i-get-query-string-values-in-javascript
-
-Most of the processing is done client side, not server side, to avoid unnecessary latencies.
-
 
 ### places service
 
@@ -66,11 +62,11 @@ URLs for accessing the places backend should look like `https://api.mysite/sugge
 
 *Q: How does the randomization algorithm work?*
 
-Google Places requests return locations ranked either by prominence or by proximity, which probably means we also have to 
+Google Places returns locations ranked either by prominence or by proximity, which probably means we also have to 
 
 (Also Google has a 1000 queries/day limit for the free account.)
 
-Is this scalable?
+<s>Is this scalable?</s> (Who cares? loly)
 
 Also: yelp for reviews??
 
