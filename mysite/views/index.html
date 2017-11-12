@@ -32,40 +32,13 @@
     </style>
   </head>
   <body>
-    <div id="floating-panel">
-    <b>Start: </b>
-    <select id="start">
-      <option value="chicago, il">Chicago</option>
-      <option value="st louis, mo">St Louis</option>
-      <option value="joplin, mo">Joplin, MO</option>
-      <option value="oklahoma city, ok">Oklahoma City</option>
-      <option value="amarillo, tx">Amarillo</option>
-      <option value="gallup, nm">Gallup, NM</option>
-      <option value="flagstaff, az">Flagstaff, AZ</option>
-      <option value="winona, az">Winona</option>
-      <option value="kingman, az">Kingman</option>
-      <option value="barstow, ca">Barstow</option>
-      <option value="san bernardino, ca">San Bernardino</option>
-      <option value="los angeles, ca">Los Angeles</option>
-    </select>
-    <b>End: </b>
-    <select id="end">
-      <option value="chicago, il">Chicago</option>
-      <option value="st louis, mo">St Louis</option>
-      <option value="joplin, mo">Joplin, MO</option>
-      <option value="oklahoma city, ok">Oklahoma City</option>
-      <option value="amarillo, tx">Amarillo</option>
-      <option value="gallup, nm">Gallup, NM</option>
-      <option value="flagstaff, az">Flagstaff, AZ</option>
-      <option value="winona, az">Winona</option>
-      <option value="kingman, az">Kingman</option>
-      <option value="barstow, ca">Barstow</option>
-      <option value="san bernardino, ca">San Bernardino</option>
-      <option value="los angeles, ca">Los Angeles</option>
-    </select>
-    </div>
     <div id="map"></div>
     <script>
+
+    var source = "winona, az";
+    var cities = ["chicago, il", "st louis, mo", "joplin, mo", "san bernardino, ca"];
+    var destIndex = 0;
+
     function GoBack(controlDiv, map) {
 
        // Set CSS for the control border.
@@ -88,7 +61,7 @@
        controlText.style.lineHeight = '38px';
        controlText.style.paddingLeft = '5px';
        controlText.style.paddingRight = '5px';
-       controlText.innerHTML = 'How About Here?';
+       controlText.innerHTML = 'Go Back';
        controlUI.appendChild(controlText);
 
        // Setup the click event listeners: simply set the map to Chicago.
@@ -161,9 +134,14 @@
         // Setup the click event listeners: simply set the map to Chicago.
         controlUI.addEventListener('click', function() {
           //go to next destination in array
-          map.setCenter(chicago);
+          updateMap();
         });
 
+      }
+
+      function updateMap(){
+        destIndex = (destIndex + 1)% cities.length;
+        initMap();
       }
 
       function initMap() {
@@ -199,18 +177,14 @@
         goBackDiv.index = 1;
         map.controls[google.maps.ControlPosition.TOP_LEFT].push(goBackDiv);
 
+        calculateAndDisplayRoute(directionsService, directionsDisplay);
 
-        var onChangeHandler = function() {
-          calculateAndDisplayRoute(directionsService, directionsDisplay);
-        };
-        document.getElementById('start').addEventListener('change', onChangeHandler);
-        document.getElementById('end').addEventListener('change', onChangeHandler);
       }
 
       function calculateAndDisplayRoute(directionsService, directionsDisplay) {
         directionsService.route({
-          origin: document.getElementById('start').value,
-          destination: document.getElementById('end').value,
+          origin: source,
+          destination: cities[destIndex],
           travelMode: 'DRIVING'
         }, function(response, status) {
           if (status === 'OK') {
