@@ -1,5 +1,6 @@
 from django.core.mail import EmailMessage
 from twilio.rest import Client as TwilioClient
+from django.conf import settings
 
 def share_via_email(to_addr, place_id):
     # TODO: place_id or client-supplied json? When you put it that way though it's obvious
@@ -14,7 +15,7 @@ def share_via_email(to_addr, place_id):
     return email.send(fail_silently=False)
 
 
-twilio_client = TwilioClient(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
+twilio_client = TwilioClient(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
 
 def share_via_text(to_number, place_id):
 

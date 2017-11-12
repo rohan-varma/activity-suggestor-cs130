@@ -120,4 +120,4 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 
-from placefindr import settings
+from placefindr.settings import *

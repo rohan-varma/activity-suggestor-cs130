@@ -1,4 +1,5 @@
 from googleplaces import GooglePlaces, types, lang
+from django.conf import settings
 
 class PlaceRecommender:
 
