@@ -3,142 +3,88 @@
   <head>
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
     <meta charset="utf-8">
+    <!--<link href="styles.css" rel="stylesheet" type="text/css"/>-->
     <title>Directions service</title>
     <style>
       /* Always set the map height explicitly to define the size of the div
        * element that contains the map. */
-      #map {
-        height: 100%;
-      }
-      /* Optional: Makes the sample page fill the window. */
       html, body {
         height: 100%;
         margin: 0;
         padding: 0;
       }
-      #floating-panel {
-        position: absolute;
-        top: 10px;
-        left: 25%;
-        z-index: 5;
-        background-color: #fff;
-        padding: 5px;
-        border: 1px solid #999;
+
+      /* Optional: Makes the sample page fill the window. */
+      #map {
+        height: 100%;
+      }
+
+      .buttonbase {
+        cursor: pointer;
+        color: #fff;
+        background-color: #686868;
+        box-shadow: 0 2px 6px rgba(0,0,0,.3);
+        border-radius: 3px;
+        margin: 1em;
+        padding: 1em;
+        font-size: 1.25em;
+        line-height: 1em;
         text-align: center;
-        font-family: 'Roboto','sans-serif';
-        line-height: 30px;
-        padding-left: 10px;
+        font-family: Roboto,Arial,sans-serif
       }
     </style>
   </head>
   <body>
-    <div id="map"></div>
+    <div id="map" style="height: 100%"></div>
     <script>
 
-    var source = "winona, az";
-    var cities = ["chicago, il", "st louis, mo", "joplin, mo", "san bernardino, ca"];
-    var destIndex = 0;
+      var source = "winona, az";
+      var cities = ["chicago, il", "st louis, mo", "joplin, mo", "san bernardino, ca", "surprise, az"];
+      var destIndex = 0;
 
-    function GoBack(controlDiv, map) {
-
-       // Set CSS for the control border.
-       var controlUI = document.createElement('div');
-       controlUI.style.backgroundColor = '#686868';
-       controlUI.style.borderRadius = '3px';
-       controlUI.style.boxShadow = '0 2px 6px rgba(0,0,0,.3)';
-       controlUI.style.cursor = 'pointer';
-       controlUI.style.marginBottom = '22px';
-       controlUI.style.textAlign = 'center';
-       controlUI.title = 'Click to recenter the map';
-       controlDiv.appendChild(controlUI);
-
-       // Set CSS for the control interior.
-       var controlText = document.createElement('div');
-       controlText.style.color = '#fff';
-       controlText.style.fontFamily = 'Roboto,Arial,sans-serif';
-       controlText.style.fontSize = '16px';
-       controlText.style.lineHeight = '38px';
-       controlText.style.paddingLeft = '5px';
-       controlText.style.paddingRight = '5px';
-       controlText.innerHTML = 'Go Back';
-       controlUI.appendChild(controlText);
-
-       // Setup the click event listeners: simply set the map to Chicago.
-       controlUI.addEventListener('click', function() {
-         //go to next destination in array
-         map.setCenter(chicago);
-       });
-
-     }
-
-    function Recommendation(controlDiv, map) {
-
-       // Set CSS for the control border.
-       var controlUI = document.createElement('div');
-       controlUI.style.backgroundColor = '#686868';
-       controlUI.style.borderRadius = '3px';
-       controlUI.style.boxShadow = '0 2px 6px rgba(0,0,0,.3)';
-       controlUI.style.cursor = 'pointer';
-       controlUI.style.marginBottom = '22px';
-       controlUI.style.textAlign = 'center';
-       controlUI.title = 'Click to recenter the map';
-       controlDiv.appendChild(controlUI);
-
-       // Set CSS for the control interior.
-       var controlText = document.createElement('div');
-       controlText.style.color = '#fff';
-       controlText.style.fontFamily = 'Roboto,Arial,sans-serif';
-       controlText.style.fontSize = '16px';
-       controlText.style.lineHeight = '38px';
-       controlText.style.paddingLeft = '5px';
-       controlText.style.paddingRight = '5px';
-       controlText.innerHTML = 'How About Here?';
-       controlUI.appendChild(controlText);
-
-       // Setup the click event listeners: simply set the map to Chicago.
-       controlUI.addEventListener('click', function() {
-         //go to next destination in array
-         map.setCenter(chicago);
-       });
-
-     }
-
-
-     function NextPlace(controlDiv, map) {
-
-        // Set CSS for the control border.
+      function GoBack(controlDiv, map) {
         var controlUI = document.createElement('div');
-        controlUI.style.backgroundColor = '#686868';
-        controlUI.style.borderRadius = '3px';
-        controlUI.style.boxShadow = '0 2px 6px rgba(0,0,0,.3)';
-        controlUI.style.cursor = 'pointer';
-        controlUI.style.marginBottom = '22px';
-        controlUI.style.textAlign = 'center';
-        controlUI.title = 'Click to recenter the map';
+        controlUI.className = "buttonbase";
+        controlUI.title = 'Go Back';
+        controlUI.innerHTML = 'Go Back';
         controlDiv.appendChild(controlUI);
 
-        // Set CSS for the control interior.
-        var controlText = document.createElement('div');
-        controlText.style.color = '#fff';
-        controlText.style.fontFamily = 'Roboto,Arial,sans-serif';
-        controlText.style.fontSize = '16px';
-        controlText.style.lineHeight = '38px';
-        controlText.style.paddingLeft = '5px';
-        controlText.style.paddingRight = '5px';
-        controlText.innerHTML = 'Try Somewhere Else';
-        controlUI.appendChild(controlText);
+        controlUI.addEventListener('click', function() {
+          //TODO: go back to splash page
+        });
+      }
+
+      function Recommendation(controlDiv, map) {
+        var controlUI = document.createElement('div');
+        controlUI.className = "buttonbase";
+        controlUI.title = 'Accept the recommendation. You can choose to send a link via text or email.';
+        controlUI.innerHTML = 'How About Here?';
+        controlDiv.appendChild(controlUI);
+
+        controlUI.addEventListener('click', function() {
+          //go to next destination in array
+          map.setCenter(chicago);
+        });
+      }
+
+      function NextPlace(controlDiv, map) {
+        var controlUI = document.createElement('div');
+        controlUI.className = "buttonbase";
+        //controlUI.title = '';
+        controlUI.innerHTML = 'Try Somewhere Else';
+        controlDiv.appendChild(controlUI);
 
         // Setup the click event listeners: simply set the map to Chicago.
         controlUI.addEventListener('click', function() {
           //go to next destination in array
-          updateMap();
+          showNext();
         });
-
       }
 
-      function updateMap(){
-        destIndex = (destIndex + 1)% cities.length;
+      function showNext(){
+        destIndex = (destIndex + 1) % cities.length;
         initMap();
+        //TODO|
       }
 
       function initMap() {
@@ -150,27 +96,18 @@
         });
         directionsDisplay.setMap(map);
 
-        // Create the DIV to hold the control and call the CenterControl()
-        // constructor passing in this DIV.
         var nextPlaceDiv = document.createElement('div');
-        var nextPlace = new NextPlace(nextPlaceDiv, map);
-
+        NextPlace(nextPlaceDiv, map);
         nextPlaceDiv.index = 1;
         map.controls[google.maps.ControlPosition.BOTTOM_RIGHT].push(nextPlaceDiv);
 
-        // Create the DIV to hold the control and call the CenterControl()
-        // constructor passing in this DIV.
         var recommendationDiv = document.createElement('div');
-        var recommendation = new Recommendation(recommendationDiv, map);
-
+        Recommendation(recommendationDiv, map);
         recommendationDiv.index = 1;
         map.controls[google.maps.ControlPosition.BOTTOM_LEFT].push(recommendationDiv);
 
-        // Create the DIV to hold the control and call the CenterControl()
-        // constructor passing in this DIV.
         var goBackDiv = document.createElement('div');
-        var goBack = new GoBack(goBackDiv, map);
-
+        GoBack(goBackDiv, map);
         goBackDiv.index = 1;
         map.controls[google.maps.ControlPosition.TOP_LEFT].push(goBackDiv);
 
@@ -191,6 +128,7 @@
           }
         });
       }
+      
     </script>
     <script async defer
     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDyDK9r0KXoy40PuvFGW3-7bUD33Rfv-fQ&callback=initMap">
