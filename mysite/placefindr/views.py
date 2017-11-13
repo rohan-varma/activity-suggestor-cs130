@@ -11,12 +11,6 @@ import json
 # import .sharer
 from .place_recommender import PlaceRecommender
 
-# Create your views here.
-
-# def index(request):
-#     return HttpResponse("Hello, world. You're at the placefindr index.")
-#     # return JsonResponse()
-
 def share(request, sharing_method):
     if sharing_method == 'email':
         sh = share_via_email
@@ -50,8 +44,8 @@ def suggest(request):
         if 'location' not in query_dict:
             raise Http404('No location input.')
         location = query_dict['location']
-        radius = query_dict['radius'] if 'radius' in query_dict else 8000  # 5 Miles
-        types = query_dict['types'] if 'types' in query_dict else []
+        radius = int(query_dict['radius']) if 'radius' in query_dict else 8000  # 5 Miles
+        types = query_dict['types'].split(',') if 'types' in query_dict else []
         places = recommender.get_places(location=location,
                                        radius=radius,
                                        types=types)
