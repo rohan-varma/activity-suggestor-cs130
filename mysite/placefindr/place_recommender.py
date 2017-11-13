@@ -2,15 +2,26 @@ from googleplaces import GooglePlaces, types, lang
 from django.conf import settings
 
 class PlaceRecommender:
+    """
+    Class responsible for grabbing the place recommendations.
+    """
 
     def __init__(self):
         self.google_places = GooglePlaces(settings.GOOGLE_API_KEY)
 
     def get_places(self, location=None, radius=None, types=None, pagetoken=None):
+        """
+        Get places based on a location, radius, and a list of place types.
+
+        :param location: String of the search location.
+        :param radius: Radius from the search location.
+        :param types: List of type strings supported by the Google Places api
+                      suported types.
+        :param pagetoken: pagetoken used to get more results from a previous
+                          search. Will ignore other parameters if used.
+        :return: GooglePlacesSearchResult containing the search results
+        """
         return self.google_places.nearby_search(location=location,
                                                 radius=radius,
                                                 types=types,
                                                 pagetoken=pagetoken)
-
-# place.get_details()
-# query_result.next_page_token
