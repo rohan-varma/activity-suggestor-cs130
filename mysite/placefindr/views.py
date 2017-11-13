@@ -13,20 +13,15 @@ from .place_recommender import PlaceRecommender
 
 # Create your views here.
 
-def index(request):
-    return HttpResponse("Hello, world. You're at the placefindr index.")
-    # return JsonResponse()
-
-def suggest(request):
-    return None
+# def index(request):
+#     return HttpResponse("Hello, world. You're at the placefindr index.")
+#     # return JsonResponse()
 
 def share(request, sharing_method):
-    '''
-    '''
     if sharing_method == 'email':
-        sh = share_via_email
+        sh = sharer.share_via_email
     elif sharing_method == 'text':
-        sh = share_via_text
+        sh = sharer.share_via_text
     else:
         return HttpResponseBadRequest('Unknown sharing_method parameter')
 
@@ -42,13 +37,13 @@ def share(request, sharing_method):
     except:
         return HttpResponseBadRequest('')
 
-
-def recommender(request):
-    # return HttpResponse("Hello, world. You're at the placefindr index.")
+def suggest(request):
+    """
+    Generates a JSON HttpResponse for a reqest for nearby places.
+    """
     recommender = PlaceRecommender()
     query_dict = request.GET.dict()
     if 'pagetoken' in query_dict:
-        # Increment page token? query_result.next_page_token
         pagetoken = query_dict['pagetoken']
         places = recommender.get_places(pagetoken=pagetoken)
     else:
