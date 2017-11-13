@@ -13,8 +13,8 @@ from .place_recommender import PlaceRecommender
 
 # Create your views here.
 
-# def index(request):
-#     return HttpResponse("Hello, world. You're at the placefindr index.")
+def index(request):
+    return HttpResponse("Hello, world. You're at the placefindr index.")
 #     # return JsonResponse()
 
 def share(request, sharing_method):
