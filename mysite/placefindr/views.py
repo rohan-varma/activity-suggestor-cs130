@@ -58,7 +58,13 @@ def suggest(request):
                                        radius=radius,
                                        types=types)
 
+
     template = loader.get_template('placefindr/index.html')
 
-    return HttpResponse(template.render({}, request))
-    #return JsonResponse(places.raw_response)
+    context = {
+        'status': places.raw_response["status"],
+        'results': places.raw_response["results"],
+        'next_page_token': places.raw_response["next_page_token"],
+    }
+    #return HttpResponse(template.render({}, request))
+    return JsonResponse(places.raw_response)
