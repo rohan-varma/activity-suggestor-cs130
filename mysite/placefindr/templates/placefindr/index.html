@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+    <!--<link href="styles.css" rel="stylesheet" type="text/css"/>-->
+    <title>Directions service</title>
+    <style>
+      /* Always set the map height explicitly to define the size of the div
+       * element that contains the map. */
+      html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+
+      /* Optional: Makes the sample page fill the window. */
+      #map {
+        height: 100%;
+      }
+
+      .buttonbase {
+        cursor: pointer;
+        color: #fff;
+        background-color: #686868;
+        box-shadow: 0 2px 6px rgba(0,0,0,.3);
+        border-radius: 3px;
+        margin: 1em;
+        padding: 1em;
+        font-size: 1.25em;
+        line-height: 1em;
+        text-align: center;
+        font-family: Roboto,Arial,sans-serif
+      }
+    </style>
+  </head>
+  <body>
+    <div id="map" style="height: 100%"></div>
+    <script>
+
+      var source = "winona, az";
+      var cities = ["chicago, il", "st louis, mo", "joplin, mo", "san bernardino, ca", "surprise, az"];
+      var destIndex = 0;
+
+      function GoBack(controlDiv, map) {
+        var controlUI = document.createElement('div');
+        controlUI.className = "buttonbase";
+        controlUI.title = 'Go Back';
+        controlUI.innerHTML = 'Go Back';
+        controlDiv.appendChild(controlUI);
+
+        controlUI.addEventListener('click', function() {
+          //TODO: go back to splash page
+        });
+      }
+
+      function Recommendation(controlDiv, map) {
+        var controlUI = document.createElement('div');
+        controlUI.className = "buttonbase";
+        controlUI.title = 'Accept the recommendation. You can choose to send a link via text or email.';
+        controlUI.innerHTML = 'How About Here?';
+        controlDiv.appendChild(controlUI);
+
+        controlUI.addEventListener('click', function() {
+          //go to next destination in array
+          map.setCenter(chicago);
+        });
+      }
+
+      function NextPlace(controlDiv, map) {
+        var controlUI = document.createElement('div');
+        controlUI.className = "buttonbase";
+        //controlUI.title = '';
+        controlUI.innerHTML = 'Try Somewhere Else';
+        controlDiv.appendChild(controlUI);
+
+        // Setup the click event listeners: simply set the map to Chicago.
+        controlUI.addEventListener('click', function() {
+          //go to next destination in array
+          showNext();
+        });
+      }
+
+      function showNext(){
+        destIndex = (destIndex + 1) % cities.length;
+        initMap();
+        //TODO|
+      }
+
+      function initMap() {
+        var directionsService = new google.maps.DirectionsService;
+        var directionsDisplay = new google.maps.DirectionsRenderer;
+        var map = new google.maps.Map(document.getElementById('map'), {
+          zoom: 7,
+          center: {lat: 41.85, lng: -87.65}
+        });
+        directionsDisplay.setMap(map);
+
+        var nextPlaceDiv = document.createElement('div');
+        NextPlace(nextPlaceDiv, map);
+        nextPlaceDiv.index = 1;
+        map.controls[google.maps.ControlPosition.BOTTOM_RIGHT].push(nextPlaceDiv);
+
+        var recommendationDiv = document.createElement('div');
+        Recommendation(recommendationDiv, map);
+        recommendationDiv.index = 1;
+        map.controls[google.maps.ControlPosition.BOTTOM_LEFT].push(recommendationDiv);
+
+        var goBackDiv = document.createElement('div');
+        GoBack(goBackDiv, map);
+        goBackDiv.index = 1;
+        map.controls[google.maps.ControlPosition.TOP_LEFT].push(goBackDiv);
+
+        calculateAndDisplayRoute(directionsService, directionsDisplay);
+
+      }
+
+      function calculateAndDisplayRoute(directionsService, directionsDisplay) {
+        directionsService.route({
+          origin: source,
+          destination: cities[destIndex],
+          travelMode: 'DRIVING'
+        }, function(response, status) {
+          if (status === 'OK') {
+            directionsDisplay.setDirections(response);
+          } else {
+            window.alert('Directions request failed due to ' + status);
+          }
+        });
+      }
+
+    </script>
+    <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDyDK9r0KXoy40PuvFGW3-7bUD33Rfv-fQ&callback=initMap">
+    </script>
+  </body>
+</html>

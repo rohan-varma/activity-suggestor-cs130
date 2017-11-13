@@ -8,6 +8,8 @@ from django.http import Http404 # django's http status codes
 from urllib.parse import parse_qsl
 import json
 
+from django.template import loader
+
 # import .sharer
 from .place_recommender import PlaceRecommender
 
@@ -55,4 +57,8 @@ def suggest(request):
         places = recommender.get_places(location=location,
                                        radius=radius,
                                        types=types)
-    return JsonResponse(places.raw_response)
+
+    template = loader.get_template('placefindr/index.html')
+
+    return HttpResponse(template.render({}, request))
+    #return JsonResponse(places.raw_response)
