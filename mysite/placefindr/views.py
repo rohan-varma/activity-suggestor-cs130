@@ -66,5 +66,5 @@ def suggest(request):
         'results': places.raw_response["results"],
         'next_page_token': places.raw_response["next_page_token"],
     }
-    #return HttpResponse(template.render({}, request))
-    return JsonResponse(places.raw_response)
+    return HttpResponse(template.render({}, request))
+    # return JsonResponse(places.raw_response)

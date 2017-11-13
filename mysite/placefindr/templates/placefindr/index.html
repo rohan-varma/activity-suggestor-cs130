@@ -58,7 +58,25 @@
         var controlUI = document.createElement('div');
         controlUI.className = "buttonbase";
         controlUI.title = 'Accept the recommendation. You can choose to send a link via text or email.';
-        controlUI.innerHTML = 'How About Here?';
+        controlUI.id = 'Recommendation'
+        var header = document.createElement('p');
+        header.innerHTML = "How about: ";
+        var locationTitle = document.createElement('p');
+        locationTitle.innerHTML = "Regency Bruin Theatre";
+        var address = document.createElement('p');
+        address.innerHTML = "Address Information";
+        var hours = document.createElement('p');
+        hours.innerHTML = "Open: 1pm - 2pm";
+
+        var share = document.createElement('button');
+        share.innerHTML = 'Share with Friends';
+        var br = document.createElement("br");
+        controlUI.appendChild(header);
+        controlUI.appendChild(locationTitle);
+        controlUI.appendChild(address);
+        controlUI.appendChild(hours);
+        controlUI.appendChild(br);
+        controlUI.appendChild(share);
         controlDiv.appendChild(controlUI);
 
         controlUI.addEventListener('click', function() {
@@ -112,12 +130,11 @@
         map.controls[google.maps.ControlPosition.TOP_LEFT].push(goBackDiv);
 
         calculateAndDisplayRoute(directionsService, directionsDisplay);
-
       }
 
       function calculateAndDisplayRoute(directionsService, directionsDisplay) {
         directionsService.route({
-          origin: source,
+          origin: new google.maps.LatLng(41.850033, -87.6500523),
           destination: cities[destIndex],
           travelMode: 'DRIVING'
         }, function(response, status) {
