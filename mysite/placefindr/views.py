@@ -17,19 +17,19 @@ def share(request, sharing_method):
     elif sharing_method == 'text':
         sh = sharer.share_via_text
     else:
-        return HttpResponseBadRequest('Unknown sharing_method parameter')
+        return HttpResponseBadRequest('HTTP 400 - bad request\nUnknown sharing_method')
 
-    # user is supplied in the query string & details in json body? Or maybe make everything come from the json?
     params = parse_qsl(request.META['QUERY_STRING'])
+    # user is supplied in the query string & details in json body? Or maybe make everything come from the json?
     #body = json.loads(request.body)
     try:
         if sh(params['addr'], params['placeid']) == 0:
         #if sh(params['addr'], body) == 0:
-            return HttpResponseServerError('')
+            return HttpResponseServerError('HTTP 500 - internal server error')
         else:
-            return HttpResponse('')
+            return HttpResponse('HTTP 200 - OK')
     except:
-        return HttpResponseBadRequest('')
+        return HttpResponseBadRequest('HTTP 400 - bad request\nMissing query parameters')
 
 def suggest(request):
     """
