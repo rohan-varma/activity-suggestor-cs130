@@ -43,8 +43,10 @@ def suggest(request):
     """
     Generates a JSON HttpResponse for a reqest for nearby places.
     """
+    print("in suggest")
     recommender = PlaceRecommender()
     query_dict = request.GET.dict()
+    print("query dict is {}".format(query_dict))
     if 'pagetoken' in query_dict:
         pagetoken = query_dict['pagetoken']
         places = recommender.get_places(pagetoken=pagetoken)
