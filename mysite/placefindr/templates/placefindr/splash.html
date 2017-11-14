@@ -3,62 +3,106 @@
   <head>
     <meta charset="UTF-8">
     <title>splash</title>
+    <style>
+    * {
+      text-align: center;
+      color: #4A4A4A;
+      font-family: Roboto,Arial,sans-serif;
+      font-size: 20px;
+    }
+    #splashTitle {
+        display: inline-block;
+        font-size: 64px;
+        margin-top: 147px;
+    }		
+    #locationsearch {
+          width: 341px;
+          font-size: 18px;
+         height: 32px;
+    }
+    .filterOpt {
+        width: 136px;
+        margin-left: 18px;
+        font-size: 16px
+    }
+    #distTitle {
+        padding-left: 76px;
+    }
+    #openTitle {
+        padding-left: 150px;
+    }
+    #locationTitle {
+        font-size: 36px;
+        padding: 10px;
+    }
+    .dropdown {
+        padding-right: 62px;
+    }
+
+    </style>
   </head>
   <body>
-
-  <h1>
-    PlaceFindr
-  </h1>
+    <img id="icon" src="images/icon_small.png">
+  <h1 id = "splashTitle">PlaceFindr</h1>
 
   <form>
-    Please enter your location:
-    <input name="location" type="text" id="location">
+
+  <span id = "locationTitle">Please enter your location:</span>
+    <input id="locationInput" type="text" placeholder="Ex: 330 De Neve Dr, Los Angeles, CA">
     <br></br>
 
-    Type of Entertainment:
-    <select name="entertainment" id="entertainment">
-      <option value="all">All</option>
-      <option value="group">For groups</option>
-      <option value="date">For a date</option>
-      <option value="single">For yourself</option>
-    </select>
-    <br></br>
+    <div class = "dropdown">
+      <span id = "enttTitle">Type of Entertainment:</span>
+      <select id="entertainment" class="filterOpt">
+        <option value="all">All</option>
+        <option value="group">For groups</option>
+        <option value="date">For a date</option>
+        <option value="single">For yourself</option>
+      </select>
+      <br></br>
 
-    Max Distance:
-    <select name="distance" id="distance">
-      <option value="none">None</option>
-      <option value="50">Within 50 miles</option>
-      <option value="10">Within 10 miles</option>
-    </select>
-    <br></br>
+      <span id = "distTitle">Max Distance:</span>
+      <select id="distanceSelect" class="filterOpt">
+        <option value="none">None</option>
+        <option value="50">Within 50 miles</option>
+        <option value="10">Within 10 miles</option>
+      </select>
+      <br></br>
 
-    Open:
-    <select name="open">
-      <option value="now">Now</option>
-      <option value="anytime">Anytime</option>
-    </select>
-    <br></br>
-
+      <span id = "hoursTitle">Open:</span>
+      <select id="hoursSelect" class="filterOpt">
+        <option value="now">Now</option>
+        <option value="anytime">Anytime</option>
+      </select>
+      <br></br>
+  </div>
     <input value="Search" type="button" onclick="constructUrl()">
 
   </form>
-  <script>
+<script>
+    /* function OnLoad() {
+
+    } */
+    function encodeQueryData(data) {
+      let ret = [];
+      for (let d in data)
+        ret.push(encodeURIComponent(d) + '=' + encodeURIComponent(data[d]));
+      return ret.join('&');
+    }
     function constructUrl(){
       var pathArray = location.href.split( '/' );
       var protocol = pathArray[0];
       var host = pathArray[2];
-      var url = protocol + '//' + host;
-      url += "/placefindr/";
-      if(document.getElementById("location")){
-        url += "suggest/";
-        url += "?location=";
-        url += document.getElementById("location").value;
-      }
-      if(document.getElementById("distance").value != "none"){
-        url += "?radius=";
-        url += document.getElementById("distance").value;
-      }
-      location.href = url;
+      var url = protocol + '//' + host + '/';
+      url += "api/suggest/";
+      var params = {};
+      params["location"] = document.getElementById("locationInput").value;
+      params["radius"] = document.getElementById("distanceSelect").value;
+      url += "?" + encodeQueryData(params);
+      window.location.href = url;
+      //console.log(JSON.stringify(url, null, 2));
+
+      //window.location.replace(url);
     }
     // console.log(window.location.href);
   </script>
