@@ -3,13 +3,14 @@ from __future__ import unicode_literals
 
 from django.test import TestCase
 
-from place_recommender import PlaceRecommender
+from .place_recommender import PlaceRecommender
 
 class PlaceRecommenderTests(TestCase):
 
     def test_gets_location_results_from_location_and_token(self):
         recommender = PlaceRecommender()
         response = recommender.get_places(location="UCLA", radius=8000)
+        print("response is {}".format(response))
         self.assertNotEqual(response.places, [])
         next_response = recommender.get_places(pagetoken=response.next_page_token)
         self.assertNotEqual(next_response.places, [])
