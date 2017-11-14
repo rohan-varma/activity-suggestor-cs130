@@ -54,12 +54,15 @@
       {% if raw_response %}
 
         var next_page_token = "{{raw_response.next_page_token}}";
+        console.log("{{raw_response}}");
         {% for r in raw_response.results %}
           lat.push({{r.geometry.location.lat}});
           lng.push({{r.geometry.location.lng}});
           names.push("{{ r.name }}");
         {% endfor %}
-
+        lat.shift();
+        lng.shift();
+        names.shift();
       {% else %}
 
       {% endif %}

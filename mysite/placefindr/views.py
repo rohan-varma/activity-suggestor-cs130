@@ -16,8 +16,8 @@ from .place_recommender import PlaceRecommender
 # Create your views here.
 
 def index(request):
-    return HttpResponse("Hello, world. You're at the placefindr index.")
-#     # return JsonResponse()
+    template = loader.get_template('placefindr/splash.html')
+    return HttpResponse(template.render([], request))
 
 def share(request, sharing_method):
     if sharing_method == 'email':
