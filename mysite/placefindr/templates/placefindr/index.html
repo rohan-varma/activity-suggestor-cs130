@@ -38,9 +38,33 @@
     <div id="map" style="height: 100%"></div>
     <script>
 
-      var source = "winona, az";
+      var source = "san bernardino, ca";
       var cities = ["chicago, il", "st louis, mo", "joplin, mo", "san bernardino, ca", "surprise, az"];
       var destIndex = 0;
+
+      // we can't have a array of LatLng objects unless it's populated in an async function D:
+      // var latlngArray = [];
+
+      var lat = []
+      var lng = []
+      var names = [];
+      var next_page_token = "";
+
+      // load context
+      {% if raw_response %}
+
+        var next_page_token = "{{raw_response.next_page_token}}";
+        {% for r in raw_response.results %}
+          lat.push({{r.geometry.location.lat}});
+          lng.push({{r.geometry.location.lng}});
+          names.push("{{ r.name }}");
+        {% endfor %}
+
+      {% else %}
+
+      {% endif %}
+
+      //console.log(raw_response.next_page_token);
 
       function GoBack(controlDiv, map) {
         var controlUI = document.createElement('div');
@@ -106,6 +130,7 @@
       }
 
       function initMap() {
+
         var directionsService = new google.maps.DirectionsService;
         var directionsDisplay = new google.maps.DirectionsRenderer;
         var map = new google.maps.Map(document.getElementById('map'), {
@@ -134,8 +159,9 @@
 
       function calculateAndDisplayRoute(directionsService, directionsDisplay) {
         directionsService.route({
-          origin: new google.maps.LatLng(41.850033, -87.6500523),
-          destination: cities[destIndex],
+          origin: source,
+          //destination: cities[destIndex],
+          destination: new google.maps.LatLng(lat[destIndex], lng[destIndex]),
           travelMode: 'DRIVING'
         }, function(response, status) {
           if (status === 'OK') {

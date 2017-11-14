@@ -60,11 +60,13 @@ def suggest(request):
 
 
     template = loader.get_template('placefindr/index.html')
-
+    #raw_response = json.dumps(places.raw_response)
     context = {
-        'status': places.raw_response["status"],
-        'results': places.raw_response["results"],
-        'next_page_token': places.raw_response["next_page_token"],
+        #'raw_response': JsonResponse(places.raw_response)
+        #'raw_response': d,
+        'raw_response': places.raw_response
     }
-    return HttpResponse(template.render({}, request))
+
+    return HttpResponse(template.render(context, request))
+
     # return JsonResponse(places.raw_response)
