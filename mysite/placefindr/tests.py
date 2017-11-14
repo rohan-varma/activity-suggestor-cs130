@@ -1,9 +1,14 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
+'''
+This file contains test cases for the PlaceFindr backend.
+'''
 
 from django.test import TestCase
 
 from .place_recommender import PlaceRecommender
+from . import sharer
+from . import views
 
 class PlaceRecommenderTests(TestCase):
 
@@ -14,6 +19,28 @@ class PlaceRecommenderTests(TestCase):
         self.assertNotEqual(response.places, [])
         next_response = recommender.get_places(pagetoken=response.next_page_token)
         self.assertNotEqual(next_response.places, [])
+
+class SharerValidationTests(TestCase):
+
+    def test_email_recipient(self):
+        self.assertEqual(share_via_email(None, "Nope"), 0)
+
+    def test_email_content_placeid(self):
+        pass
+
+class SharerViewTests(TestCase):
+
+    def setUp(self):
+        pass
+
+    def test_missing_parameters(self):
+        pass
+
+    def test_bad_sharemethod_url(self):
+        pass
+
+    def tearDown(self):
+        pass
 
 # Holding off on this until front end implemented. They may change these views.
 class RecommenderViewTests(TestCase):
