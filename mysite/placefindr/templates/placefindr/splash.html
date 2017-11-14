@@ -12,11 +12,11 @@
 
   <form>
     Please enter your location:
-    <input name="location" type="text">
+    <input name="location" type="text" id="location">
     <br></br>
 
     Type of Entertainment:
-    <select name="entertainment">
+    <select name="entertainment" id="entertainment">
       <option value="all">All</option>
       <option value="group">For groups</option>
       <option value="date">For a date</option>
@@ -25,7 +25,7 @@
     <br></br>
 
     Max Distance:
-    <select name="distance">
+    <select name="distance" id="distance">
       <option value="none">None</option>
       <option value="50">Within 50 miles</option>
       <option value="10">Within 10 miles</option>
@@ -39,11 +39,28 @@
     </select>
     <br></br>
 
-    <input value="Search" type="button">
+    <input value="Search" type="button" onclick="constructUrl()">
 
   </form>
   <script>
-    console.log(window.location.href);
+    function constructUrl(){
+      var pathArray = location.href.split( '/' );
+      var protocol = pathArray[0];
+      var host = pathArray[2];
+      var url = protocol + '//' + host;
+      url += "/placefindr/";
+      if(document.getElementById("location")){
+        url += "suggest/";
+        url += "?location=";
+        url += document.getElementById("location").value;
+      }
+      if(document.getElementById("distance").value != "none"){
+        url += "?radius=";
+        url += document.getElementById("distance").value;
+      }
+      location.href = url;
+    }
+    // console.log(window.location.href);
   </script>
   </body>
 </html>
