@@ -86,7 +86,7 @@
         var header = document.createElement('p');
         header.innerHTML = "How about: ";
         var locationTitle = document.createElement('p');
-        locationTitle.innerHTML = "Regency Bruin Theatre";
+        locationTitle.innerHTML = names[destIndex];
         var address = document.createElement('p');
         address.innerHTML = "Address Information";
         var hours = document.createElement('p');
@@ -124,7 +124,7 @@
       }
 
       function showNext(){
-        destIndex = (destIndex + 1) % cities.length;
+        destIndex = (destIndex + 1) % lat.length;
         initMap();
         //TODO|
       }
