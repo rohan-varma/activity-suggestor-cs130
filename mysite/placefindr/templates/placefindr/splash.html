@@ -92,19 +92,29 @@
 
     } */
 
-    var autocomplete;
+    var autocomplete, service;
+    var lat, lng = 0;
 
 
     function init() {
+      // create places service object to get lat lng of provided location
+      let map = new google.maps.Map(document.createElement('div'));
+      service = new google.maps.places.PlacesService(map);
+
       // Create the autocomplete object, restricting the search to
       // location types with an address
       autocomplete = new google.maps.places.Autocomplete(
           (document.getElementById('autocomplete')),
           //{types: ['address']}
         );
-      // When the user selects an address from the dropdown, populate the address
-      // fields in the form.
-      //autocomplete.addListener('place_changed', retrievePlace);
+
+      autocomplete.addListener('place_changed', getLatLng);
+    }
+
+    function getLatLng(){
+      var place = autocomplete.getPlace();
+      lat = place.geometry.location.lat();
+      lng = place.geometry.location.lng();
     }
 
     function encodeQueryData(data) {
@@ -120,7 +130,7 @@
       var url = protocol + '//' + host + "/";
       url += "api/suggest/";
 
-     if(document.getElementById("autocomplete").value!= ""){
+     if(document.getElementById("autocomplete").value!= "" && lat != 0 && lng != 0){
        url += "?location=";
        url += document.getElementById("autocomplete").value;
        if(document.getElementById("distanceSelect").value != "none"){
