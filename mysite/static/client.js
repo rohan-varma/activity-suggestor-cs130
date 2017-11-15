@@ -54,8 +54,7 @@ function validateLocationRequestParams() {
  * 
  */
 function getRecommenderUrl(params) {
-  var url = getUrlRootPath() + "api/suggest/" + encodeQueryData(params);
-
+  return url = getUrlRootPath() + "api/suggest/?" + encodeQueryData(params);
 }
 // console.log(window.location.href);
 
@@ -63,7 +62,7 @@ function getRecommenderUrl(params) {
  * 
  */
 function loadResults_SplashPage() {
-  if (document.getElementById("locationInput").value != "") {
+  if (document.getElementById("locationInput").value == "") {
     alert("Please enter your location!");
     //TODO| use something less intrusive
     return;

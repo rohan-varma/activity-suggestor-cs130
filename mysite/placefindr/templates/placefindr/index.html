@@ -29,36 +29,19 @@
       var source_lng;
 
       // we can't have a array of LatLng objects unless it's populated in an async function D:
+      // which also means we can't use a template like that
       // var latlngArray = [];
       var lat = []
       var lng = []
       var names = [];
       var next_page_token = "";
 
-      // load context
-      {% if raw_response %}
-
-        var next_page_token = "{{raw_response.next_page_token}}";
-        console.log("{{raw_response}}");
-        {% for r in raw_response.results %}
-          lat.push({{r.geometry.location.lat}});
-          lng.push({{r.geometry.location.lng}});
-          names.push("{{ r.name }}");
-        {% endfor %}
-        source_lat = lat[0];
-        source_lng = lng[0];
-        lat.shift();
-        lng.shift();
-        names.shift();
-      {% else %}
-
-      {% endif %}
 
       //console.log(raw_response.next_page_token);
 
       function GoBack(controlDiv, map) {
         var controlUI = document.createElement('div');
-        controlUI.className = "buttonbase";
+        controlUI.className = "button_dark";
         controlUI.title = 'Go Back';
         controlUI.innerHTML = 'Go Back';
         controlDiv.appendChild(controlUI);
@@ -74,7 +57,7 @@
 
       function Recommendation(controlDiv, map) {
         var controlUI = document.createElement('div');
-        controlUI.className = "buttonbase";
+        controlUI.className = "button_dark";
         controlUI.title = 'Accept the recommendation. You can choose to send a link via text or email.';
         controlUI.id = 'Recommendation'
         var header = document.createElement('p');
@@ -105,7 +88,7 @@
 
       function NextPlace(controlDiv, map) {
         var controlUI = document.createElement('div');
-        controlUI.className = "buttonbase";
+        controlUI.className = "button_dark";
         //controlUI.title = '';
         controlUI.innerHTML = 'Try Somewhere Else';
         controlDiv.appendChild(controlUI);

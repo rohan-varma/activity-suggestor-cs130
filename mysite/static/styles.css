@@ -1,5 +1,41 @@
+/* text size classes (absolute) */
 
-.buttonbase {
+.Large {
+  font-size: 25px;
+}
+.Med {
+  font-size: 20px;
+}
+.Small {
+  font-size: 16px;
+}
+
+
+/* layout elements */
+
+* {
+  font-family: Poppins,sans-serif;
+}
+
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  color: #4A4A4A;
+  font-size: 12px;
+}
+
+#title {
+  font-size: 50px;
+  margin: 20px auto;
+  text-align: center;
+}
+
+p>img {
+  vertical-align: middle;
+}
+
+.button_dark {
   cursor: pointer;
   color: #fff;
   background-color: #686868;
@@ -10,6 +46,49 @@
   font-size: 1.25em;
   line-height: 1em;
   text-align: center;
-  font-family: Roboto,Arial,sans-serif
+}
+
+form.mainPanel {
+  text-align: center;
+  margin: 0.5em auto;
+  width: 100%;
+}
+
+fieldset {
+  border: none;
+  margin: 20px auto;
+  width: 50em;
+}
+
+fieldset>div {
+  width: 100%;
+  display: block;
+}
+
+fieldset>div.twoElemLine {
+  text-align: left;
+}
+fieldset>div.singleElemLine {
+  text-align: center;
+}
+
+.paramInput {
+  /* Needed because unlike other controls, the default for input elements is not to inherit, and we wish to override that. */
+  font-family: inherit;
+  font-size: inherit;
+}
+
+.twoElemLine>.paramLabel, .twoElemLine>.paramInput {
+  width: 48%;
+  /* TODO| WTF???????? */
+  margin: 0.25em 0;
+  text-align: left;
+  display: inline-block;
+}
+
+.singleElemLine>.paramLabel, .singleElemLine>.paramInput {
+  width: 98%;
+  margin: 0.25em auto;
+  text-align: center;
 }
 
