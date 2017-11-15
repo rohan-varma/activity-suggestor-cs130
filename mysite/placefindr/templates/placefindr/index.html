@@ -3,7 +3,8 @@
   <head>
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
     <meta charset="utf-8">
-    <link href="static/styles.css" rel="stylesheet" type="text/css"/>
+    <link href="../../../static/styles.css" rel="stylesheet" type="text/css"/>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins">
     <title>Placefindr</title>
     <style>
       /* style for html element cannot be moved to external css */
@@ -41,7 +42,7 @@
 
       function GoBack(controlDiv, map) {
         var controlUI = document.createElement('div');
-        controlUI.className = "button_dark";
+        controlUI.className = "button_dark Small";
         controlUI.title = 'Go Back';
         controlUI.innerHTML = 'Go Back';
         controlDiv.appendChild(controlUI);
@@ -62,13 +63,16 @@
         controlUI.id = 'Recommendation'
         var header = document.createElement('p');
         header.innerHTML = "How about: ";
+        header.className = "Small";
         var locationTitle = document.createElement('p');
         locationTitle.innerHTML = names[destIndex];
+        locationTitle.className = "Large"
         var address = document.createElement('p');
         address.innerHTML = "Address Information";
+        address.className = "Med";
         var hours = document.createElement('p');
         hours.innerHTML = "Open: 1pm - 2pm";
-
+        hours.className = "Small";
         var share = document.createElement('button');
         share.innerHTML = 'Share with Friends';
         var br = document.createElement("br");
@@ -88,7 +92,7 @@
 
       function NextPlace(controlDiv, map) {
         var controlUI = document.createElement('div');
-        controlUI.className = "button_dark";
+        controlUI.className = "button_dark Small";
         //controlUI.title = '';
         controlUI.innerHTML = 'Try Somewhere Else';
         controlDiv.appendChild(controlUI);
@@ -112,19 +116,22 @@
         var directionsDisplay = new google.maps.DirectionsRenderer;
         var map = new google.maps.Map(document.getElementById('map'), {
           zoom: 7,
-          center: {lat: 41.85, lng: -87.65}
+          center: {lat: 41.85, lng: -87.65},
+          zoomControl: false,
+          mapTypeControl: false,
+          streetViewControl: false
         });
         directionsDisplay.setMap(map);
 
         var nextPlaceDiv = document.createElement('div');
         NextPlace(nextPlaceDiv, map);
         nextPlaceDiv.index = 1;
-        map.controls[google.maps.ControlPosition.BOTTOM_RIGHT].push(nextPlaceDiv);
+        map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(nextPlaceDiv);
 
         var recommendationDiv = document.createElement('div');
         Recommendation(recommendationDiv, map);
         recommendationDiv.index = 1;
-        map.controls[google.maps.ControlPosition.BOTTOM_LEFT].push(recommendationDiv);
+        map.controls[google.maps.ControlPosition.LEFT_BOTTOM].push(recommendationDiv);
 
         var goBackDiv = document.createElement('div');
         GoBack(goBackDiv, map);
