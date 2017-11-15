@@ -47,8 +47,16 @@
 
   <form>
 
-  <span id = "locationTitle">Please enter your location:</span>
-    <input id="locationInput" type="text" placeholder="Ex: 330 De Neve Dr, Los Angeles, CA">
+    <span id = "locationTitle">Please enter your location:</span>
+
+    <div id="locationField">
+      <input id="autocomplete" placeholder="Your Location"
+        onFocus="geolocate()" type="text"></input>
+      <!--
+      <input id="locationInput" type="text" placeholder="Ex: 330 De Neve Dr, Los Angeles, CA">
+      -->
+    </div>
+
     <br></br>
 
     <div class = "dropdown">
@@ -75,7 +83,7 @@
         <option value="anytime">Anytime</option>
       </select>
       <br></br>
-  </div>
+    </div>
     <input value="Search" type="button" onclick="constructUrl()">
 
   </form>
@@ -83,6 +91,22 @@
     /* function OnLoad() {
 
     } */
+
+    var autocomplete;
+
+
+    function init() {
+      // Create the autocomplete object, restricting the search to
+      // location types with an address
+      autocomplete = new google.maps.places.Autocomplete(
+          (document.getElementById('autocomplete')),
+          //{types: ['address']}
+        );
+      // When the user selects an address from the dropdown, populate the address
+      // fields in the form.
+      //autocomplete.addListener('place_changed', retrievePlace);
+    }
+
     function encodeQueryData(data) {
       let ret = [];
       for (let d in data)
@@ -95,20 +119,39 @@
       var host = pathArray[2];
       var url = protocol + '//' + host + "/";
       url += "api/suggest/";
-      if(document.getElementById("locationInput").value != ""){
-          url += "?location=";
-          url += document.getElementById("locationInput").value;
-          if(document.getElementById("distanceSelect").value != "none"){
-               url += "?radius=";
-               url += document.getElementById("distanceSelect").value;
-          }
-          location.href = url;
+
+     if(document.getElementById("autocomplete").value!= ""){
+       url += "?location=";
+       url += document.getElementById("autocomplete").value;
+       if(document.getElementById("distanceSelect").value != "none"){
+            url += "?radius=";
+            url += document.getElementById("distanceSelect").value;
+       }
+       location.href = url;
      }
      else{
-       alert("Please enter your location!")
+       alert("Please enter a proper location!")
      }
     }
+
+    function geolocate() {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function(position) {
+          var geolocation = {
+            lat: position.coords.latitude,
+            lng: position.coords.longitude
+          };
+          var circle = new google.maps.Circle({
+            center: geolocation,
+            radius: position.coords.accuracy
+          });
+          autocomplete.setBounds(circle.getBounds());
+        });
+      }
+    }
     // console.log(window.location.href);
+  </script>
+  <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDyDK9r0KXoy40PuvFGW3-7bUD33Rfv-fQ&libraries=places&callback=init">
   </script>
   </body>
 </html>
