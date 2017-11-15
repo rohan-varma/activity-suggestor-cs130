@@ -2,7 +2,8 @@
 <html>
   <head>
     <meta charset="UTF-8">
-    <title>splash</title>
+    <link href="static/styles.css" rel="stylesheet" type="text/css"/>
+    <title>Placefindr</title>
     <style>
     * {
       text-align: center;
@@ -16,9 +17,9 @@
         margin-top: 147px;
     }
     #locationsearch {
-          width: 341px;
-          font-size: 18px;
-         height: 32px;
+        width: 341px;
+        font-size: 18px;
+        height: 32px;
     }
     .filterOpt {
         width: 136px;
@@ -75,44 +76,11 @@
         <option value="anytime">Anytime</option>
       </select>
       <br></br>
-  </div>
+    </div>
     <input value="Search" type="button" onclick="constructUrl()">
 
   </form>
-<script>
-    /* function OnLoad() {
 
-    } */
-    function encodeQueryData(data) {
-      let ret = [];
-      for (let d in data)
-        ret.push(encodeURIComponent(d) + '=' + encodeURIComponent(data[d]));
-      return ret.join('&');
-    }
-    function constructUrl(){
-      var pathArray = location.href.split( '/' );
-      var protocol = pathArray[0];
-      var host = pathArray[2];
-      var url = protocol + '//' + host + "/";
-      url += "api/suggest/";
-
-      if (document.getElementById("locationInput").value != "") {
-        alert("Please enter your location!");
-        //TODO
-      }
-      else {
-        var params = {};
-        params["location"] = document.getElementById("locationInput").value;
-        params["radius"] = document.getElementById("distanceSelect").value;
-        url += "?" + encodeQueryData(params);
-        
-        window.location.href = url; // for testing only
-        //console.log(JSON.stringify(url, null, 2));
-
-        //window.location.replace(url);
-      }
-    }
-    // console.log(window.location.href);
-  </script>
+  <script src="static/client.js"></script>
   </body>
 </html>
