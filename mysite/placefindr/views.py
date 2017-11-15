@@ -11,6 +11,13 @@ import json
 from . import sharer
 from .place_recommender import PlaceRecommender
 
+# remove these if not using templates
+from django.template import loader
+
+def index(request):
+    template = loader.get_template('placefindr/splash.html')
+    return HttpResponse(template.render({}, request))
+
 def share(request, sharing_method):
     if sharing_method == 'email':
         sh = sharer.share_via_email
@@ -35,8 +42,10 @@ def suggest(request):
     """
     Generates a JSON HttpResponse for a reqest for nearby places.
     """
+    print("in suggest")
     recommender = PlaceRecommender()
     query_dict = request.GET.dict()
+    print("query dict is {}".format(query_dict))
     if 'pagetoken' in query_dict:
         pagetoken = query_dict['pagetoken']
         places = recommender.get_places(pagetoken=pagetoken)
@@ -49,4 +58,16 @@ def suggest(request):
         places = recommender.get_places(location=location,
                                        radius=radius,
                                        types=types)
-    return JsonResponse(places.raw_response)
+
+
+    template = loader.get_template('placefindr/index.html')
+    #raw_response = json.dumps(places.raw_response)
+    context = {
+        #'raw_response': JsonResponse(places.raw_response)
+        #'raw_response': d,
+        'raw_response': places.raw_response
+    }
+
+    return HttpResponse(template.render(context, request))
+
+    # return JsonResponse(places.raw_response)

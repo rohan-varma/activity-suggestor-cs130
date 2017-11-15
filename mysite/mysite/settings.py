@@ -31,6 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'placefindr.apps.PlacefindrConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -53,6 +54,7 @@ ROOT_URLCONF = 'mysite.urls'
 
 TEMPLATES = [
     {
+        #'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [],
         'APP_DIRS': True,
@@ -69,6 +71,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'mysite.wsgi.application'
 
+#TEMPLATE_DIRS = [os.path.join(BASE_DIR, 'placefindr/templates')]
 
 # Database
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases

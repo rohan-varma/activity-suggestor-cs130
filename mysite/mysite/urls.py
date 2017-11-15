@@ -19,18 +19,21 @@ from django.contrib import admin
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^api/', include('placefindr.urls')),
+    #url(r'^api/', include('placefindr.urls')),
+    #url(r'^', include('placefindr.urls')),
+    url(r'^', include('placefindr.urls')),
 ]
 
-if settings.DEBUG == True:
-    from django.http import HttpResponse
-
-    with open('./static/index.html', 'r') as myfile:
-        main_page_html = myfile.read()
-
-    def index(request):
-        return HttpResponse(main_page_html)
-
-    urlpatterns += [
-        url(r'^$', index),
-    ]
+# '''Alternative way of doing this'''
+# if settings.DEBUG == True:
+#     from django.http import HttpResponse
+#
+#     with open('./static/index.html', 'r') as myfile:
+#         main_page_html = myfile.read()
+#
+#     def index(request):
+#         return HttpResponse(main_page_html)
+#
+#     urlpatterns += [
+#         url(r'^$', index),
+#     ]
