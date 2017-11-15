@@ -16,6 +16,7 @@ Including another URLconf
 from django.conf import settings
 from django.conf.urls import include, url
 from django.contrib import admin
+from django.views import static
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
@@ -24,7 +25,13 @@ urlpatterns = [
     url(r'^', include('placefindr.urls')),
 ]
 
-# '''Alternative way of doing this'''
+if settings.DEBUG == True:
+    urlpatterns += [
+        url(r'^static/(?P<path>.*)$', static.serve, {'document_root': settings.STATIC_ROOT,}),
+        #url(r'^uploads/(?P<path>.*)$', static.serve, {'document_root': settings.MEDIA_ROOT,}),
+    ]
+
+# '''Another way to do the index page'''
 # if settings.DEBUG == True:
 #     from django.http import HttpResponse
 #
