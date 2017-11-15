@@ -18,11 +18,7 @@ class PlaceRecommenderTests(TestCase):
         response = recommender.get_places(location="UCLA", radius=8000)
         print("response is {}".format(response))
         self.assertNotEqual(response.places, [])
-        print(response.next_page_token)
-        return True
-        next_response = recommender.get_places(pagetoken=response.next_page_token)
-        self.assertNotEqual(next_response.places, [])
-
+        
 class SharerValidationTests(TestCase):
 
     def test_email_recipient(self):
