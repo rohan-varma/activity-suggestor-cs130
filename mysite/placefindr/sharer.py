@@ -30,8 +30,6 @@ def share_via_email(to_addr, place_id):
     return email.send(fail_silently=True)
 
 
-twilio_client = TwilioClient(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
-
 def share_via_text(to_number, place_id):
     '''
     Sends a text message (via Twilio) containing a Google Maps link for the location suggestion.
@@ -40,6 +38,7 @@ def share_via_text(to_number, place_id):
     :param place_id: a string that uniquely identifies a location to Google Maps
     :return: <TODO>
     '''
+    twilio_client = TwilioClient(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
     message = twilio_client.messages.create(
         to=to_number, 
         from_="+15017250604",

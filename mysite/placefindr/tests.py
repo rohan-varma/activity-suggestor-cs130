@@ -8,7 +8,7 @@ from django.test import TestCase
 
 from .place_recommender import PlaceRecommender
 #from . import sharer
-from .sharer import share_via_email
+from .sharer import share_via_email, share_via_text
 from . import views
 
 class PlaceRecommenderTests(TestCase):
@@ -18,14 +18,20 @@ class PlaceRecommenderTests(TestCase):
         response = recommender.get_places(location="UCLA", radius=8000)
         print("response is {}".format(response))
         self.assertNotEqual(response.places, [])
-        
+
 class SharerValidationTests(TestCase):
 
     def test_email_recipient(self):
         self.assertEqual(share_via_email(None, "Nope"), 1)
 
     def test_email_content_placeid(self):
-        pass
+        response = share_via_email(None, "Hello World")
+        print(response)
+        return True
+
+    def test_share_via_text(self):
+        to_num, pid = "+15017250604", "random id"
+        print(share_via_text(to_num, pid))
 
 class SharerViewTests(TestCase):
 
