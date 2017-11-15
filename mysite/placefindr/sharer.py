@@ -13,17 +13,22 @@ def share_via_email(to_addr, place_id):
     # TODO: place_id or client-supplied json? When you put it that way though it's obvious
     # TODO [later]: personalize for sender (will need to authenticate user of website), and customize message depending on whether recipient is the same as sender (& always add to user profile)
     email = EmailMessage(
-        subject='Your PlaceFindr Suggestion (Do Not Reply)',
-        message='The following location has been shared to you:\n',
-        #TODO
-        recipient_list=[ to_addr ],
-        #connection=,
-    )
-
+    'Hello',
+    'Body goes here',
+    'from@example.com',
+    ['to1@example.com', 'to2@example.com'],
+    ['bcc@example.com'],
+    reply_to=['another@example.com'],
+    headers={'Message-ID': 'foo'},
+)
+    email = EmailMessage(
+        'Your PlaceFindr Suggestion (Do Not Reply)',
+        'The following location has been shared with you: \n',
+        'from@example.com',
+        ['to1@example.com', 'to2@example.com'],
+        )
     return email.send(fail_silently=True)
 
-
-twilio_client = TwilioClient(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
 
 def share_via_text(to_number, place_id):
     '''
@@ -33,6 +38,7 @@ def share_via_text(to_number, place_id):
     :param place_id: a string that uniquely identifies a location to Google Maps
     :return: <TODO>
     '''
+    twilio_client = TwilioClient(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
     message = twilio_client.messages.create(
         to=to_number, 
         from_="+15017250604",
