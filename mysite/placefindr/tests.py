@@ -7,7 +7,8 @@ This file contains test cases for the PlaceFindr backend.
 from django.test import TestCase
 
 from .place_recommender import PlaceRecommender
-from . import sharer
+#from . import sharer
+from .sharer import share_via_email
 from . import views
 
 class PlaceRecommenderTests(TestCase):
@@ -23,7 +24,7 @@ class PlaceRecommenderTests(TestCase):
 class SharerValidationTests(TestCase):
 
     def test_email_recipient(self):
-        self.assertEqual(share_via_email(None, "Nope"), 0)
+        self.assertEqual(share_via_email(None, "Nope"), 1)
 
     def test_email_content_placeid(self):
         pass
