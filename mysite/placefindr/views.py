@@ -14,10 +14,6 @@ from .place_recommender import PlaceRecommender
 # remove these if not using templates
 from django.template import loader
 
-def index(request):
-    template = loader.get_template('placefindr/splash.html')
-    return HttpResponse(template.render({}, request))
-
 def share(request, sharing_method):
     if sharing_method == 'email':
         sh = sharer.share_via_email

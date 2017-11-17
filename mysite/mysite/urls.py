@@ -13,6 +13,8 @@ Including another URLconf
     1. Import the include() function: from django.conf.urls import url, include
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
+
+import os
 from django.conf import settings
 from django.conf.urls import include, url
 from django.contrib import admin
@@ -20,27 +22,26 @@ from django.views import static
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    #url(r'^api/', include('placefindr.urls')),
-    #url(r'^', include('placefindr.urls')),
-    url(r'^', include('placefindr.urls')),
+    url(r'^api/', include('placefindr.urls')),
 ]
 
 if settings.DEBUG == True:
+    # This adds URLs for static files
     urlpatterns += [
         url(r'^static/(?P<path>.*)$', static.serve, {'document_root': settings.STATIC_ROOT,}),
         #url(r'^uploads/(?P<path>.*)$', static.serve, {'document_root': settings.MEDIA_ROOT,}),
     ]
 
-# '''Another way to do the index page'''
-# if settings.DEBUG == True:
-#     from django.http import HttpResponse
-#
-#     with open('./static/index.html', 'r') as myfile:
-#         main_page_html = myfile.read()
-#
-#     def index(request):
-#         return HttpResponse(main_page_html)
-#
-#     urlpatterns += [
-#         url(r'^$', index),
-#     ]
+if settings.DEBUG == True:
+    # This adds URL for main page (splash.html)
+
+    with open(os.path.join(settings.STATIC_ROOT, 'splash.html'), 'r') as myfile:
+        main_page_html = myfile.read()
+
+    from django.http import HttpResponse
+    def main_page_view(request):
+        return HttpResponse(main_page_html)
+
+    urlpatterns += [
+        url(r'^', main_page_view),
+    ]

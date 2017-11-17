@@ -16,8 +16,8 @@ Workspace structure (under /mysite)
 | ---- | ----------- |
 | `manage.py` | django management script |
 | `mysite/` | django root directory (this is like a "main" (entry point) function) |
-| `mysite/static/`, <br />`mysite/templates/` | main UI + shared assets |
-| `placefindr` | main backend |
+| `placefindr/` | main backend |
+| `static/` | main UI + static assets |
 
 Main areas of functionality
 
