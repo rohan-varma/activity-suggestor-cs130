@@ -19,13 +19,14 @@
       PlaceFindr
     </p>
 
-    <form class="mainPanel">
+    <form class="mainPanel" onsubmit="">
+      <!--TODO| onsubmit-->
       <div style="width: 100%" class="Med"><fieldset style="width: 500px">
         <div class="singleElemLine">
           <span class="paramLabel">Please enter your location: </span>
         </div>
         <div class="singleElemLine">
-          <input id="locationInput" class="paramInput" type="text" placeholder="address or ZIP code" required/>
+          <input id="locationInput" class="paramInput" type="text" required placeholder="address or ZIP code"/>
         </div>
       </fieldset></div>
       <div style="width: 100%" class="Small"><fieldset style="width: 500px">  
@@ -34,9 +35,9 @@
           <select id="entertainment" class="paramInput Small">
             <!--TODO-->
             <option value="all">All</option>
-            <option value="group">For groups</option>
+            <!-- <option value="group">For groups</option>
             <option value="date">For a date</option>
-            <option value="single">For yourself</option>
+            <option value="single">For yourself</option> -->
           </select>
         </div>
         <div class="twoElemLine">
@@ -49,14 +50,14 @@
         <div class="twoElemLine">
           <label class="paramLabel">When:</label>
           <select id="hoursSelect" class="paramInput Small">
-            <option value="now">Open now</option>
             <option value="any">Don't care</option>
+            <option value="now">Open now</option>
           </select>
           <br/>
         </div>
           <!--TODO| need to be able to choose hours-->
       </fieldset></div>
-      <input value="Go!" type="button" class="Med" onclick="loadResults_SplashPage()">
+      <input type="submit" class="Med" value="Go!">
     </form>
 
     <script src="../../../static/client.js"></script>
