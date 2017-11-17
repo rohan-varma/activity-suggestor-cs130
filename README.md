@@ -14,15 +14,17 @@ Run `python mysite/manage.py runserver` to start server. In order to run tests, 
 
 ## High level overview
 
-Workspace structure (under ./mysite)
+Workspace structure
 
 | path | description |
 | ---- | ----------- |
-| `manage.py` | django management script |
-| `mysite/` | django root (entry point) directory (which confusingly has the same name as the workspace root) |
-| `placefindr/` | main backend |
-| `placefindr/tests.py` | tests for backend |
-| `static/` | main UI + static assets |
+| `README.md` | this file |
+| `requirements.txt` | list of pip package dependencies |
+| `mysite/manage.py` | django management script |
+| `mysite/mysite/` | django root (entry point) directory (which confusingly has the same name as the workspace root) |
+| `mysite/placefindr/` | main backend <br/>`urls.py`: URL dispatch conf for backend services <br/>`views.py`: main dispatcher for backend "views" <br/>`place_recommender.py`: the location suggestor module <br/>`sharer.py`: the sharing module <br/>`settings.py`: python file loaded by the main django `settings.py`, contains backend settings and API keys |
+| `mysite/placefindr/tests.py` | tests for backend |
+| `mysite/static/` | main UI + static assets <br/>`splash.html`: landing page <br/> `index.html`: results page <br/>`client.js`: frontend script <br/> `styles.css`: styles |
 
 Main areas of functionality
 
@@ -48,7 +50,7 @@ URLs
 | URL | description |
 | ---- | ----------- |
 | `/` | the root path, which shows the splash page, where the user is prompted for a start location & search parameters |
-| `/results?location=<...>&... | the results page showing location suggestion on Google Maps |
+| `/results?<...>` | the results page showing location suggestion on Google Maps |
 | `/api/suggest/?<...>` | the suggestion service; returns suggestions in JSON format |
 | `/api/share/?<...>` | the sharing service; sends message containing Google Maps link to specified address <br/>no user authentication is currently enforced |
 
