@@ -10,17 +10,9 @@ def share_via_email(to_addr, place_id):
     :param place_id: a string that uniquely identifies a location to Google Maps
     :return: 1 if email is sent, or 0 if not
     '''
-    # TODO: place_id or client-supplied json? When you put it that way though it's obvious
+    # TODO: get place data through google api
     # TODO [later]: personalize for sender (will need to authenticate user of website), and customize message depending on whether recipient is the same as sender (& always add to user profile)
-    email = EmailMessage(
-    'Hello',
-    'Body goes here',
-    'from@example.com',
-    ['to1@example.com', 'to2@example.com'],
-    ['bcc@example.com'],
-    reply_to=['another@example.com'],
-    headers={'Message-ID': 'foo'},
-)
+    
     email = EmailMessage(
         'Your PlaceFindr Suggestion (Do Not Reply)',
         'The following location has been shared with you: \n',
