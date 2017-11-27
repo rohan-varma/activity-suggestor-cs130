@@ -3,158 +3,79 @@
   <head>
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
     <meta charset="utf-8">
-    <link href="static/styles.css" rel="stylesheet" type="text/css"/>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins">
     <title>Placefindr</title>
+    <link href="/static/styles.css" rel="stylesheet" type="text/css"/>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins">
     <style>
-      /* style for html element cannot be moved to external css */
       html, body {
         height: 100%;
         margin: 0;
         padding: 0;
       }
-      
-      /* Always set the map height explicitly to define the size of the div element that contains the map. */
-      /* Optional: Makes the sample page fill the window. */
-      #map {
-        height: 100%;
-      }
     </style>
+    <script type="text/javascript" src="/static/client.js" async></script>
   </head>
   <body>
+    <!-- If we are going to do it this way... then make a separate class for these outer div's -->
     <div id="map" style="height: 100%"></div>
+    <div id="goBackDiv" class="header">
+      <button class="darkgrey round Small" id="goBackBtn">Go Back</button>
+    </div>
+    <div id="nextPlaceDiv">
+      <button class="darkgrey round Med" id="nextPlaceBtn">Try Somewhere Else</button>
+    </div>
+    <div id="recommendationDiv" style="width:250px" class="light round Med">
+      <p class="Small">How about</p>
+      <p class="Med" id="selLocName">TODO: place name</p>
+      <p class="Small" id="selLocAddr">TODO: address</p>
+      <p class="Small" id="selLocLatLng">TODO: GPS coordinates</p>
+      <p class="Small" id="selLocHours">TODO: business hours</p>
+      <p class="Med">Do you wish to accept the recommendation? You can choose to send a link via text or email.</p>
+      <button class="darkgrey round Med" id="recommendationBtn">Sounds great!</button>
+    </div>
     <script>
-
+      var startLocation = parseLatLng(decodeQueryData(getUrlQueryString()).location);
+      var suggestionPreferences = null; //TODO|
+      var destLocations = [];
       var destIndex = 0;
-      var source_lat;
-      var source_lng;
-
-      // we can't have a array of LatLng objects unless it's populated in an async function D:
-      // which also means we can't use a template like that
-      // var latlngArray = [];
-      var lat = []
-      var lng = []
       var names = [];
       var next_page_token = "";
+      // TODO| maybe not strip the details from the json response? => views.py
 
+      var mapService;
 
-      //console.log(raw_response.next_page_token);
+      function initMap() {
+        mapService = new MapService();
 
-      function GoBack(controlDiv, map) {
-        var controlUI = document.createElement('div');
-        controlUI.className = "button_dark Small";
-        controlUI.title = 'Go Back';
-        controlUI.innerHTML = 'Go Back';
-        controlDiv.appendChild(controlUI);
+        // note: a floating element that is not part of the maps embed will not be displayed on fullscreeen
+        //TODO| instead of having controls inside the Google Maps embed, consider making a sidebar (& maybe embed splash page controls into the sidebar too, if the user choose to do their direction on the map) 
 
-        controlUI.addEventListener('click', function() {
-          var pathArray = location.href.split( '/' );
-          var protocol = pathArray[0];
-          var host = pathArray[2];
-          var url = protocol + '//' + host
-          location.href = url;
-        });
-      }
+        var goBackDiv = document.getElementById('goBackDiv');
+        goBackDiv.firstChild.addEventListener('click', 
+          function() { location.href = getUrlRootPath(); }
+        );
 
-      function Recommendation(controlDiv, map) {
-        var controlUI = document.createElement('div');
-        controlUI.className = "button_dark";
-        controlUI.title = 'Accept the recommendation. You can choose to send a link via text or email.';
-        controlUI.id = 'Recommendation'
-        var header = document.createElement('p');
-        header.innerHTML = "How about: ";
-        header.className = "Small";
-        var locationTitle = document.createElement('p');
-        locationTitle.innerHTML = names[destIndex];
-        locationTitle.className = "Large"
-        var address = document.createElement('p');
-        address.innerHTML = "Address Information";
-        address.className = "Med";
-        var hours = document.createElement('p');
-        hours.innerHTML = "Open: 1pm - 2pm";
-        hours.className = "Small";
-        var share = document.createElement('button');
-        share.innerHTML = 'Share with Friends';
-        var br = document.createElement("br");
-        controlUI.appendChild(header);
-        controlUI.appendChild(locationTitle);
-        controlUI.appendChild(address);
-        controlUI.appendChild(hours);
-        controlUI.appendChild(br);
-        controlUI.appendChild(share);
-        controlDiv.appendChild(controlUI);
+        var nextPlaceDiv = document.getElementById('nextPlaceDiv');
+        nextPlaceDiv.firstChild.addEventListener('click', showNext);
 
-        controlUI.addEventListener('click', function() {
-          //go to next destination in array
-          map.setCenter(chicago);
-        });
-      }
+        var recommendationDiv = document.getElementById('recommendationDiv');
+        //recommendationDiv.lastChild.addEventListener('click', );
+        //TODO| accepting suggestion
 
-      function NextPlace(controlDiv, map) {
-        var controlUI = document.createElement('div');
-        controlUI.className = "button_dark Small";
-        //controlUI.title = '';
-        controlUI.innerHTML = 'Try Somewhere Else';
-        controlDiv.appendChild(controlUI);
+        var map = mapService.directionsDisplay.getMap();
+        map.controls[google.maps.ControlPosition.TOP_LEFT].push(goBackDiv);
+        map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(nextPlaceDiv);
+        map.controls[google.maps.ControlPosition.LEFT_BOTTOM].push(recommendationDiv);
 
-        // Setup the click event listeners: simply set the map to Chicago.
-        controlUI.addEventListener('click', function() {
-          //go to next destination in array
-          showNext();
-        });
+        //TODO| make request to backend & display results in the elements with appropriate IDs
+
+        mapService.getAndDisplayRoute(map, startLocation, destLocations[destIndex]);
       }
 
       function showNext(){
-        destIndex = (destIndex + 1) % lat.length;
-        initMap();
-        //TODO|
+        destIndex = (destIndex + 1) % destLocations.length;
+        mapService.getAndDisplayRoute(map, startLocation, destLocations[destIndex]);
       }
-
-      function initMap() {
-
-        var directionsService = new google.maps.DirectionsService;
-        var directionsDisplay = new google.maps.DirectionsRenderer;
-        var map = new google.maps.Map(document.getElementById('map'), {
-          zoom: 7,
-          center: {lat: 41.85, lng: -87.65},
-          zoomControl: false,
-          mapTypeControl: false,
-          streetViewControl: false
-        });
-        directionsDisplay.setMap(map);
-
-        var nextPlaceDiv = document.createElement('div');
-        NextPlace(nextPlaceDiv, map);
-        nextPlaceDiv.index = 1;
-        map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(nextPlaceDiv);
-
-        var recommendationDiv = document.createElement('div');
-        Recommendation(recommendationDiv, map);
-        recommendationDiv.index = 1;
-        map.controls[google.maps.ControlPosition.LEFT_BOTTOM].push(recommendationDiv);
-
-        var goBackDiv = document.createElement('div');
-        GoBack(goBackDiv, map);
-        goBackDiv.index = 1;
-        map.controls[google.maps.ControlPosition.TOP_LEFT].push(goBackDiv);
-
-        calculateAndDisplayRoute(directionsService, directionsDisplay);
-      }
-
-      function calculateAndDisplayRoute(directionsService, directionsDisplay) {
-        directionsService.route({
-          origin: new google.maps.LatLng(source_lat, source_lng),
-          destination: new google.maps.LatLng(lat[destIndex], lng[destIndex]),
-          travelMode: 'DRIVING'
-        }, function(response, status) {
-          if (status === 'OK') {
-            directionsDisplay.setDirections(response);
-          } else {
-            window.alert('Directions request failed due to ' + status);
-          }
-        });
-      }
-
     </script>
     <script async defer
     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDyDK9r0KXoy40PuvFGW3-7bUD33Rfv-fQ&callback=initMap">
