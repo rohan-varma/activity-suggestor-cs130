@@ -3,6 +3,7 @@
 
 * {
   font-family: Poppins,sans-serif;
+  box-sizing: border-box;
 }
 
 body {
@@ -49,16 +50,22 @@ fieldset {
   width: 50em;
 }
 
-fieldset>div {
+fieldset>div.Row {
   width: 100%;
+  margin: 0;
+  padding: 0.1em;
   display: block;
+  white-space: nowrap;
+  text-align: center;
 }
 
-fieldset>div.twoElemLine {
+fieldset>div.Row>div.Half {
+  width: 50%;
+  margin: 0;
+  padding: 0.1em;
+  display: inline-block;
+  white-space: nowrap;
   text-align: left;
-}
-fieldset>div.singleElemLine {
-  text-align: center;
 }
 
 .paramInput {
@@ -67,18 +74,11 @@ fieldset>div.singleElemLine {
   font-size: inherit;
 }
 
-.twoElemLine>.paramLabel, .twoElemLine>.paramInput {
-  width: 48%;
-  /* TODO| WTF???????? */
-  margin: 0.25em 0;
-  text-align: left;
-  display: inline-block;
-}
-
-.singleElemLine>.paramLabel, .singleElemLine>.paramInput {
-  width: 98%;
-  margin: 0.25em auto;
-  text-align: center;
+.paramLabel, .paramInput {
+  width: 100%;
+  margin: 0;
+  padding: 0.2em 0;
+  display: inline-block;  
 }
 
 /* text size classes (absolute) */

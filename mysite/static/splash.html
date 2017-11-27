@@ -3,15 +3,16 @@
   <head>
     <meta charset="UTF-8">
     <title>Placefindr</title>
-    <!-- <style>
+    <style>
       html {
         height: 100%;
         margin: 0;
         padding: 0;
       }
-    </style> -->
+    </style>
     <link rel="stylesheet" type="text/css" href="static/styles.css"/>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins">
+    <script type="text/javascript" src="static/client.js" async></script>
   </head>
   <body>
     <p id="title">
@@ -22,44 +23,53 @@
     <form class="mainPanel" onsubmit="">
       <!--TODO| onsubmit-->
       <div style="width: 100%" class="Med"><fieldset style="width: 500px">
-        <div class="singleElemLine">
+        <div class="Row">
           <span class="paramLabel">Please enter your location: </span>
         </div>
-        <div class="singleElemLine">
+        <div class="Row">
           <input id="locationInput" class="paramInput" type="text" required placeholder="address or ZIP code"/>
         </div>
       </fieldset></div>
       <div style="width: 100%" class="Small"><fieldset style="width: 500px">  
-        <div class="twoElemLine">
-          <label class="paramLabel">What kind of place?</label>
-          <select id="entertainment" class="paramInput Small">
-            <!--TODO-->
-            <option value="all">All</option>
-            <!-- <option value="group">For groups</option>
-            <option value="date">For a date</option>
-            <option value="single">For yourself</option> -->
-          </select>
+        <div class="Row">
+          <div class="Half">
+            <label class="paramLabel">What kind of place?</label>
+          </div>
+          <div class="Half">
+            <select id="entertainment" class="paramInput">
+              <!--TODO-->
+              <option value="all">All</option>
+              <!--<option value="group">For groups</option>
+                  <option value="date">For a date</option>
+                  <option value="single">For yourself</option> -->
+            </select>
+          </div>
         </div>
-        <div class="twoElemLine">
-          <label class="paramLabel">Max Distance (in meters):</label>
-          <input id="distanceSelect" class="paramInput Small" 
-          type="number" step="10" min="0" max="50000"/>
+        <div class="Row">
+          <div class="Half">
+            <label class="paramLabel">Max Distance (in meters):</label>
+          </div>
+          <div class="Half">
+            <input id="distanceSelect" class="paramInput" type="number" step="10" min="0" max="50000"/>
+          </div>
           <!-- TODO| max distance supported by Google Places is 50 km. Let's worry about converting to miles later. -->
           <br/>
         </div>
-        <div class="twoElemLine">
-          <label class="paramLabel">When:</label>
-          <select id="hoursSelect" class="paramInput Small">
-            <option value="any">Don't care</option>
-            <option value="now">Open now</option>
-          </select>
+        <div class="Row">
+          <div class="Half">
+            <label class="paramLabel">When:</label>
+          </div>
+          <div class="Half">
+            <select id="hoursSelect" class="paramInput">
+              <option value="any">Don't care</option>
+              <option value="now">Open now</option>
+            </select>
+          </div>
           <br/>
         </div>
           <!--TODO| need to be able to choose hours-->
       </fieldset></div>
       <input type="submit" class="Med" value="Go!">
     </form>
-
-    <script src="static/client.js"></script>
   </body>
 </html>
