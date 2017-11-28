@@ -4,16 +4,21 @@
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
     <meta charset="utf-8">
     <title>Placefindr</title>
-    <link href="/static/styles.css" rel="stylesheet" type="text/css"/>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins">
+    <link rel="stylesheet" type="text/css" href="/static/styles.css"/>
+    <!-- <link rel="stylesheet" type="text/css" href="/static/fonts/ITCAvantGardeStd.css"/> -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
     <style>
       html, body {
         height: 100%;
         margin: 0;
         padding: 0;
+        font-family: Roboto, Helvetica LT Std, Helvetica, Arial, sans-serif;
       }
     </style>
     <script type="text/javascript" src="/static/client.js" async></script>
+    <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDyDK9r0KXoy40PuvFGW3-7bUD33Rfv-fQ&callback=initMap">
+    </script>
   </head>
   <body>
     <!-- If we are going to do it this way... then make a separate class for these outer div's -->
@@ -76,9 +81,6 @@
         destIndex = (destIndex + 1) % destLocations.length;
         mapService.getAndDisplayRoute(map, startLocation, destLocations[destIndex]);
       }
-    </script>
-    <script async defer
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDyDK9r0KXoy40PuvFGW3-7bUD33Rfv-fQ&callback=initMap">
     </script>
   </body>
 </html>

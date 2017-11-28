@@ -1,0 +1,24 @@
+@font-face {
+    font-family: ITC Avant Garde Std;
+    font-weight: normal;
+    font-style: normal;
+    src: url(ITCAvantGardeStd-Bk.otf);
+}
+@font-face {
+    font-family: ITC Avant Garde Std;
+    font-weight: normal;
+    font-style: italic;
+    src: url(ITCAvantGardeStd-BkObl.otf);
+}
+@font-face {
+    font-family: ITC Avant Garde Std;
+    font-weight: bold;
+    font-style: normal;
+    src: url(ITCAvantGardeStd-Demi.otf);
+}
+@font-face {
+    font-family: ITC Avant Garde Std;
+    font-weight: bold;
+    font-style: italic;
+    src: url(ITCAvantGardeStd-DemiObl.otf);
+}
