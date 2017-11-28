@@ -18,7 +18,6 @@ import os
 from django.conf import settings
 from django.conf.urls import include, url
 from django.contrib import admin
-from django.views import static
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
@@ -26,22 +25,27 @@ urlpatterns = [
 ]
 
 if settings.DEBUG == True:
-    # This adds URLs for static files
-    urlpatterns += [
-        url(r'^static/(?P<path>.*)$', static.serve, {'document_root': settings.STATIC_ROOT,}),
-        #url(r'^uploads/(?P<path>.*)$', static.serve, {'document_root': settings.MEDIA_ROOT,}),
-    ]
-
-if settings.DEBUG == True:
-    # This adds URL for main page (splash.html)
 
     with open(os.path.join(settings.STATIC_ROOT, 'splash.html'), 'r') as myfile:
+        splash_page_html = myfile.read()
+    with open(os.path.join(settings.STATIC_ROOT, 'index.html'), 'r') as myfile:
         main_page_html = myfile.read()
 
     from django.http import HttpResponse
+    def splash_page_view(request):
+        return HttpResponse(splash_page_html)
     def main_page_view(request):
         return HttpResponse(main_page_html)
 
+    from django.views.generic.base import RedirectView
+    from django.views import static
+
     urlpatterns += [
-        url(r'^', main_page_view),
+        # home, splash & main page urls
+        url(r'^$', RedirectView.as_view(pattern_name='splash-page', permanent=False), name="home-path"),
+        url(r'^splash$', splash_page_view, name="splash-page"),
+        url(r'^main$', main_page_view, name="main-page"),
+
+        # generic /static urls
+        url(r'^static/(?P<path>.*)$', static.serve, {'document_root': settings.STATIC_ROOT,}),
     ]

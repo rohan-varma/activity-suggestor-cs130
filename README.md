@@ -49,10 +49,12 @@ URLs
 
 | URL | description |
 | ---- | ----------- |
-| `/` | the root path, which shows the splash page, where the user is prompted for a start location & search parameters |
-| `/results?<...>` | the results page showing location suggestion on Google Maps |
+| `/` | redirects to `/splash` |
+| `/splash` | the splash page, where the user is prompted for a start location & search parameters |
+| `/main` (no parameters) | splash page with map embed |
+| `/main?<...>` | the results page, showing location suggestions on Google Maps |
 | `/api/suggest/?<...>` | the suggestion service; returns suggestions in JSON format |
-| `/api/share/?<...>` | the sharing service; sends message containing Google Maps link to specified address <br/>no user authentication is currently enforced |
+| `/api/share/<...>/?<...>` | the sharing service; sends message containing Google Maps link to specified email address or phone number <br/>no user authentication is currently enforced |
 
 
 ## Testing
