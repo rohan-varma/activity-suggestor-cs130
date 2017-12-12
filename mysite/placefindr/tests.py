@@ -6,9 +6,9 @@ This file contains test cases for the PlaceFindr backend.
 
 from django.test import TestCase
 
-from place_recommender import PlaceRecommender
+from .place_recommender import PlaceRecommender
 #from . import sharer
-from sharer import share_via_email, share_via_text
+from .sharer import share_via_email, share_via_text
 #import views
 
 class PlaceRecommenderTests(TestCase):
