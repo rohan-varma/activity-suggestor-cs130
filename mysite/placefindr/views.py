@@ -48,7 +48,6 @@ def suggest(request):
     """
     query_dict = request.GET.dict()
 
-    print("query dict is {}".format(query_dict))
     recommender = PlaceRecommender()
     if 'pagetoken' in query_dict:
         pagetoken = query_dict['pagetoken']
@@ -62,9 +61,6 @@ def suggest(request):
         places = recommender.get_places(location=location,
                                        radius=radius,
                                        types=types)
-
-    print('got the places')
-    print(places.raw_response)
     raw_response = json.dumps(places.raw_response, default=decimal_default)
 
     return JsonResponse(places.raw_response)

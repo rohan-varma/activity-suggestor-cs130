@@ -6,10 +6,10 @@ This file contains test cases for the PlaceFindr backend.
 
 from django.test import TestCase
 
-from .place_recommender import PlaceRecommender
+from place_recommender import PlaceRecommender
 #from . import sharer
-from .sharer import share_via_email, share_via_text
-from . import views
+from sharer import share_via_email, share_via_text
+#import views
 
 class PlaceRecommenderTests(TestCase):
 
@@ -55,3 +55,5 @@ class RecommenderViewTests(TestCase):
 
     def test_gets_json_from_location_and_token(self):
         pass
+
+
