@@ -12,9 +12,7 @@ To install all the requirements, run `pip[3] install requirements.txt`.
 Run `python mysite/manage.py runserver` to start server. In order to run tests, please first `cd` into the outer `mysite` directory, before running `python manage.py test`; **otherwise test discovery will fail**.
 
 
-## High level overview
-
-Workspace structure
+## Workspace structure
 
 | path | description |
 | ---- | ----------- |
@@ -25,6 +23,9 @@ Workspace structure
 | `mysite/placefindr/` | main backend <br/>`urls.py`: URL dispatch conf for backend services <br/>`views.py`: main dispatcher for backend "views" <br/>`place_recommender.py`: the location suggestor module <br/>`sharer.py`: the sharing module <br/>`settings.py`: python file loaded by the main django `settings.py`, contains backend settings and API keys |
 | `mysite/placefindr/tests.py` | tests for backend |
 | `mysite/static/` | main UI + static assets <br/>`splash.html`: landing page <br/> `index.html`: results page <br/>`client.js`: frontend script <br/> `styles.css`: styles |
+
+
+## Features & Web Interface
 
 Main areas of functionality
 
@@ -39,11 +40,7 @@ Main areas of functionality
     * Emailing (emails are sent from a service account)
 * UI for user feed & profile [optional]
 * service for user profiles [optional]
-
-
-## Features & Implementation
-
-This section describes the web interface definitions & the internals that support them.
+* 
 
 URLs
 
@@ -51,10 +48,14 @@ URLs
 | ---- | ----------- |
 | `/` | redirects to `/splash` |
 | `/splash` | the splash page, where the user is prompted for a start location & search parameters |
-| `/main` (no parameters) | splash page with map embed |
+| `/main` (no parameters) | the start page (splash page with embedded map for choosing the start location) |
 | `/main?<...>` | the results page, showing location suggestions on Google Maps |
 | `/api/suggest/?<...>` | the suggestion service; returns suggestions in JSON format |
 | `/api/share/<...>/?<...>` | the sharing service; sends message containing Google Maps link to specified email address or phone number <br/>no user authentication is currently enforced |
+
+
+## Implementation & Documentation
+
 
 
 ## Testing

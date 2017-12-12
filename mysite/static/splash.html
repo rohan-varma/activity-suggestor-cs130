@@ -14,7 +14,8 @@
     <link rel="stylesheet" type="text/css" href="/static/styles.css"/>
     <link rel="stylesheet" type="text/css" href="/static/fonts/ITCAvantGardeStd.css"/>
     <!-- <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Quicksand"> -->
-    <script type="text/javascript" src="static/client.js" async></script>
+    <script type="text/javascript" src="static/client.js"></script>
+    <link rel="shortcut icon" type="image/x-icon" href="/static/images/favicon.ico"/>
   </head>
   <body>
     <p id="title">
@@ -22,14 +23,19 @@
       PlaceFindr
     </p>
 
-    <form class="mainPanel" onsubmit="">
+    <form class="mainPanel" onsubmit="showResults()">
       <!--TODO| onsubmit-->
-      <div style="width: 100%" class="Med"><fieldset style="width: 500px">
+      <div style="width: 100%" class="Med"><fieldset style="max-width: 500px">
         <div class="Row">
           <span class="paramLabel">Please enter your location: </span>
         </div>
         <div class="Row">
-          <input id="locationInput" class="paramInput" type="text" required placeholder="address or ZIP code"/>
+          <div class="ThreeQuarters">
+            <input id="locationInput" class="paramInput" type="text" required placeholder="address or ZIP code"/>
+          </div>
+            <div class="Quarter">
+            <input type="button" class="paramInput button square lightgrey" value="Show map">
+          </div>
         </div>
       </fieldset></div>
       <div style="width: 100%" class="Small"><fieldset style="width: 500px">  
@@ -69,9 +75,12 @@
           </div>
           <br/>
         </div>
-          <!--TODO| need to be able to choose hours-->
+        <!--TODO| need to be able to choose hours-->
+        <!--TODO| consider adding a "show map" button-->
       </fieldset></div>
-      <input type="submit" class="Med square lightgrey" value="Get suggestions">
+      <div class="Large">
+        <input type="submit" class="paramInput square lightgrey" value="Get suggestions">
+      </div>
     </form>
   </body>
 </html>

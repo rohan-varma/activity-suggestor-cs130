@@ -12,13 +12,14 @@
         height: 100%;
         margin: 0;
         padding: 0;
-        font-family: Roboto, Helvetica LT Std, Helvetica, Arial, sans-serif;
+        font-family: Roboto, "Helvetica LT Std", Helvetica, Arial, sans-serif;
       }
     </style>
-    <script type="text/javascript" src="/static/client.js" async></script>
+    <script type="text/javascript" src="/static/client.js"></script>
     <script async defer
     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDyDK9r0KXoy40PuvFGW3-7bUD33Rfv-fQ&callback=initMap">
     </script>
+    <link rel="shortcut icon" type="image/x-icon" href="/static/images/favicon.ico"/>
   </head>
   <body>
     <!-- If we are going to do it this way... then make a separate class for these outer div's -->
@@ -39,7 +40,9 @@
       <button class="darkgrey round Med" id="recommendationBtn">Sounds great!</button>
     </div>
     <script>
-      var startLocation = parseLatLng(decodeQueryData(getUrlQueryString()).location);
+      var queryParams = decodeQueryData(getUrlQueryString());
+      var startLocation = parseLatLng(queryParams["location"]);
+      var startLocation = null;
       var suggestionPreferences = null; //TODO|
       var destLocations = [];
       var destIndex = 0;
@@ -74,6 +77,7 @@
 
         //TODO| make request to backend & display results in the elements with appropriate IDs
 
+        //TODO| handle error if destLocations is empty
         mapService.getAndDisplayRoute(map, startLocation, destLocations[destIndex]);
       }
 

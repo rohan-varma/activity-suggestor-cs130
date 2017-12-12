@@ -50,8 +50,27 @@ div.Row>div.Half {
   text-align: left;
 }
 
+div.Row>div.Quarter {
+  width: 25%;
+  margin: 0;
+  padding: 0.1em;
+  display: inline-block;
+  white-space: nowrap;
+  text-align: left;
+}
+
+div.Row>div.ThreeQuarters {
+  width: 75%;
+  margin: 0;
+  padding: 0.1em;
+  display: inline-block;
+  white-space: nowrap;
+  text-align: left;
+}
+
 
 /* text size classes (absolute) */
+/* Whenever possible, apply to the div element that directly or indirectly contains the text */
 
 .Large {
   font-size: 25px;
@@ -124,12 +143,18 @@ fieldset {
   font-size: inherit;
 }
 
-.paramLabel, .paramInput {
+.Row .paramLabel, .Row .paramInput {
   width: 100%;
   height: 100%;
   margin: 0;
   padding: 0.2em;
   display: inline-block;
+}
+
+.Row .paramInput.button {
+  display: table-cell;
+  width: 100%;
+  padding: 0.3em;
 }
 
 

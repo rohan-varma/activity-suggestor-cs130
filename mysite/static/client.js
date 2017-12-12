@@ -9,10 +9,10 @@
  * @see https://stackoverflow.com/questions/111529/how-to-create-query-parameters-in-javascript
  */
 function encodeQueryData(params) {
-  let ret = [];
+  var result = [];
   for (let d in params)
-    ret.push(encodeURIComponent(d) + '=' + encodeURIComponent(params[d]));
-  return ret.join('&');
+    result.push(encodeURIComponent(d) + '=' + encodeURIComponent(params[d]));
+  return result.join('&');
 }
 
 /**
@@ -21,9 +21,13 @@ function encodeQueryData(params) {
  * @return {object} object with fields generated from the key-value pairs of the query string
  * @see https://stackoverflow.com/questions/8648892/convert-url-parameters-to-a-javascript-object
  */
-function decodeQueryData(search) {
-  search?JSON.parse('{"' + search.replace(/&/g, '","').replace(/=/g,'":"') + '"}',
-    function(key, value) { return key===""?value:decodeURIComponent(value) }):{}
+function decodeQueryData(query) {
+  var result = {};
+  query.split('&').forEach(function(pair) {
+      pair = pair.split('=');
+      result[pair[0]] = decodeURIComponent(pair[1] || '');
+  });
+  return result;
 }
 
 /**
@@ -68,7 +72,7 @@ function LatLng(lat, lng) {
  * @param {string} locstring - string describing latitude and longitude of a location, given in the format "lat,lng"
  * @return {LatLng} null if conversion failed
  */
-function parseLatLng(locstring) 
+function parseLatLng(locstring)
 {
   if (locstring == null) // null or undefined
     return null;
@@ -101,7 +105,7 @@ function getRecommenderUrl(params) {
 }
 
 function getResultsPageUrl(params) {
-  //return url = getUrlRootPath() + 
+  return url = getUrlRootPath() + "main?" + encodeQueryData(params);
 }
 
 /**
