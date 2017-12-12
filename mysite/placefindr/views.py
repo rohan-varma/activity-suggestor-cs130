@@ -47,6 +47,14 @@ def get_types_from_request(query_dict):
     li = query_dict['types'].split(',')
     return [s.strip() for s in li]
 
+def get_radius_from_request(query_dict):
+    if 'radius' not in query_dict:
+        return 8000 # 5 miles
+    try:
+        radius = int(query_dict['radius'])
+        return radius
+    except ValueError:
+        return 8000 # 5 miles
 
 
 @csrf_exempt
@@ -70,6 +78,8 @@ def suggest(request):
             raise Http404('No location input.')
         location = query_dict['location']
         radius = int(query_dict['radius']) if 'radius' in query_dict else 8000  # 5 Miles
+        r = get_radius_from_request(query_dict)
+        assert r == radius, "Houston we have a problem"
         types = get_types_from_request(query_dict)
         places = recommender.get_places(location=location,
                                        radius=radius,
