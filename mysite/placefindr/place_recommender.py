@@ -21,7 +21,6 @@ class PlaceRecommender(object):
                           search. Will ignore other parameters if used.
         :return: GooglePlacesSearchResult containing the search results
         """
-        print('types are: {}'.format(types))
         if pagetoken:
             return self.google_places.nearby_search(pagetoken=pagetoken)
         else:

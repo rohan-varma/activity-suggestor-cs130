@@ -41,10 +41,23 @@ def decimal_default(obj):
         return float(obj)
     raise TypeError
 
+def get_types_from_request(query_dict):
+    if 'types' not in query_dict:
+        return []
+    li = query_dict['types'].split(',')
+    return [s.strip() for s in li]
+
+
+
 @csrf_exempt
 def suggest(request):
     """
     Generates a JSON HttpResponse for a reqest for nearby places.
+    PARAMS for request: 
+    pagetoken (optional, you get this from a prev request)
+    location: Human readable location (string)
+    radius: int (meters)
+    types: comma-separated string of types that are listed here: https://developers.google.com/places/supported_types
     """
     query_dict = request.GET.dict()
 
@@ -57,7 +70,7 @@ def suggest(request):
             raise Http404('No location input.')
         location = query_dict['location']
         radius = int(query_dict['radius']) if 'radius' in query_dict else 8000  # 5 Miles
-        types = query_dict['types'].split(',') if 'types' in query_dict else []
+        types = get_types_from_request(query_dict)
         places = recommender.get_places(location=location,
                                        radius=radius,
                                        types=types)

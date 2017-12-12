@@ -3,22 +3,34 @@ import json
 import random
 import string
 
-
-
-if __name__ == '__main__':
+def test_basic_call():
 	data = {
 	'location': 'UCLA',
 	'radius': 5000,
 	}
 	print(data)
 	res = requests.get('http://localhost:8000/api/suggest/', params = data)
-	print(res.status_code)
+	assert res.status_code == 200
 	r = res.json()
-	print('results are')
 	actual_results = r['results']
-	print(len(actual_results))
-	#print(list(actual_results[0].keys()))
-	example_result = actual_results[0]
-	#print(list(example_result.items()))
 	all_result_names = [res['name'] for res in actual_results]
 	print(all_result_names)
+
+def test_type_input():
+	data = {
+		'location': 'UCLA',
+		'radius': 5000,
+		'types': 'bakery, bank'
+		}
+	print(data)
+	res = requests.get('http://localhost:8000/api/suggest/', params = data)
+	assert res.status_code == 200
+	r = res.json()
+	actual_results = r['results']
+	all_result_names = [res['name'] for res in actual_results]
+	print(all_result_names)	
+
+
+if __name__ == '__main__':
+	test_basic_call()
+	test_type_input()
