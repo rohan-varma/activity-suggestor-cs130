@@ -6,8 +6,9 @@ from django.http import HttpResponse, JsonResponse
 from django.http import HttpResponseBadRequest, HttpResponseServerError
 from django.http import Http404 # django's http status codes
 from urllib.parse import parse_qsl
+from django.views.decorators.csrf import csrf_exempt
 import json
-
+import decimal
 from . import sharer
 from .place_recommender import PlaceRecommender
 
@@ -15,6 +16,7 @@ from .place_recommender import PlaceRecommender
 from django.template import loader
 
 def share(request, sharing_method):
+    print('in share method')
     if sharing_method == 'email':
         sh = sharer.share_via_email
     elif sharing_method == 'text':
@@ -34,14 +36,20 @@ def share(request, sharing_method):
     except:
         return HttpResponseBadRequest('HTTP 400 - bad request\nMissing query parameters')
 
+def decimal_default(obj):
+    if isinstance(obj, decimal.Decimal):
+        return float(obj)
+    raise TypeError
+
+@csrf_exempt
 def suggest(request):
     """
     Generates a JSON HttpResponse for a reqest for nearby places.
     """
-    print("in suggest")
-    recommender = PlaceRecommender()
     query_dict = request.GET.dict()
+
     print("query dict is {}".format(query_dict))
+    recommender = PlaceRecommender()
     if 'pagetoken' in query_dict:
         pagetoken = query_dict['pagetoken']
         places = recommender.get_places(pagetoken=pagetoken)
@@ -55,7 +63,8 @@ def suggest(request):
                                        radius=radius,
                                        types=types)
 
-
-    raw_response = json.dumps(places.raw_response)
+    print('got the places')
+    print(places.raw_response)
+    raw_response = json.dumps(places.raw_response, default=decimal_default)
 
     return JsonResponse(places.raw_response)
