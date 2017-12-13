@@ -21,7 +21,7 @@
       PlaceFindr
     </p>
 
-    <form class="mainPanel" style="max-width:50em">
+    <form class="mainPanel" style="max-width:50em" onsubmit="showResults(); return false;">
       <!--TODO| onsubmit-->
       <div style="width: 100%" class="Med"><fieldset style="max-width: 500px">
         <div class="Row">
@@ -75,8 +75,7 @@
         </div>
       </fieldset></div>
       <div class="Large">
-        <!--type="submit" - removed because that's too complicated; using onclick for now -->
-        <input class="paramInput square lightgrey" value="Get suggestions" onclick="showResults()">
+        <input type="submit" class="paramInput square lightgrey" value="Get suggestions">
       </div>
     </form>
     <script>
