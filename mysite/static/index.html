@@ -4,6 +4,7 @@
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
     <meta charset="utf-8">
     <title>Placefindr</title>
+    <link rel="shortcut icon" type="image/x-icon" href="/static/images/favicon.ico"/>
     <link rel="stylesheet" type="text/css" href="/static/styles.css"/>
     <!-- <link rel="stylesheet" type="text/css" href="/static/fonts/ITCAvantGardeStd.css"/> -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
@@ -12,78 +13,110 @@
         height: 100%;
         margin: 0;
         padding: 0;
-        font-family: Roboto, "Helvetica LT Std", Helvetica, Arial, sans-serif;
+        /* font-family: Roboto; */
+      }
+      @media screen and (orientation: landscape) {
+        #btn2Div { display: none; }
+        #sidebar { display: block; }
+      }
+      @media screen and (orientation: portrait) {
+        #sidebar { display: none; }
       }
     </style>
     <script type="text/javascript" src="/static/client.js"></script>
-    <script async defer
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDyDK9r0KXoy40PuvFGW3-7bUD33Rfv-fQ&callback=initMap">
-    </script>
-    <link rel="shortcut icon" type="image/x-icon" href="/static/images/favicon.ico"/>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDyDK9r0KXoy40PuvFGW3-7bUD33Rfv-fQ&callback=onLoad"></script>
   </head>
   <body>
-    <!-- If we are going to do it this way... then make a separate class for these outer div's -->
-    <div id="map" style="height: 100%"></div>
-    <div id="goBackDiv" class="header">
-      <button class="darkgrey round Small" id="goBackBtn">Go Back</button>
+    <div class="Row" id="btn2Div">
+      <button id="btn2" class="paramInput square lightgrey" onclick="btn2_onClick()">Toggle Sidebar</button>
+      <!--btn2 is used when using portrait mode-->
     </div>
-    <div id="nextPlaceDiv">
-      <button class="darkgrey round Med" id="nextPlaceBtn">Try Somewhere Else</button>
+    <div id="sidebar">
+      <div class="Row">
+        <!--TODO| expand/collapse controls, similar to "go back"-->
+        <button id="btn1" class="paramInput square lightgrey" onclick="btn1_onClick()"/>
+      </div>
+      <div id="sidebarContent" style="width:100%;height:100%">
+        <iframe id="editSearchDiv" src="/splash?noheader=1&embed=1" style="width:100%;height:100%"></iframe>
+        <div id="recommendationDiv" style="width:100%;height:100%" class="light square Med">
+          <p class="Small">How about</p>
+          <p class="Med" id="selLocName">TODO: place name</p>
+          <p class="Small" id="selLocAddr">TODO: address</p>
+          <p class="Small" id="selLocLatLng">TODO: GPS coordinates</p>
+          <p class="Small" id="selLocHours">TODO: business hours</p>
+          <p class="Med">Do you wish to accept the recommendation? You can choose to send a link via text or email.</p>
+          <button class="darkgrey round Med" id="recommendationBtn">Sounds great!</button>
+          <button class="darkgrey round Med" id="nextPlaceBtn">Try Somewhere Else</button>
+        </div>
+      </div>
+    
     </div>
-    <div id="recommendationDiv" style="width:250px" class="light round Med">
-      <p class="Small">How about</p>
-      <p class="Med" id="selLocName">TODO: place name</p>
-      <p class="Small" id="selLocAddr">TODO: address</p>
-      <p class="Small" id="selLocLatLng">TODO: GPS coordinates</p>
-      <p class="Small" id="selLocHours">TODO: business hours</p>
-      <p class="Med">Do you wish to accept the recommendation? You can choose to send a link via text or email.</p>
-      <button class="darkgrey round Med" id="recommendationBtn">Sounds great!</button>
+    <div id="contentbody">
+      <div id="map" style="height: 100%"></div>
     </div>
+
     <script>
-      var queryParams = decodeQueryData(getUrlQueryString());
-      var startLocation = parseLatLng(queryParams["location"]);
+      var queryParams = null;
+      
       var startLocation = null;
-      var suggestionPreferences = null; //TODO|
-      var destLocations = [];
-      var destIndex = 0;
-      var names = [];
       var next_page_token = "";
-      // TODO| maybe not strip the details from the json response? => views.py
+      var destIndex = -1;
+      var destLocationInfoArr = []; //TODO|
+      // TODO| maybe not strip the details from the json response? => views.py & client.js
 
       var mapService;
 
-      function initMap() {
-        mapService = new MapService();
-
-        // note: a floating element that is not part of the maps embed will not be displayed on fullscreeen
-        //TODO| instead of having controls inside the Google Maps embed, consider making a sidebar (& maybe embed splash page controls into the sidebar too, if the user choose to do their direction on the map) 
-
-        var goBackDiv = document.getElementById('goBackDiv');
-        goBackDiv.firstChild.addEventListener('click', 
-          function() { location.href = getUrlRootPath(); }
-        );
-
-        var nextPlaceDiv = document.getElementById('nextPlaceDiv');
-        nextPlaceDiv.firstChild.addEventListener('click', showNext);
-
+      function btn1_onClick()
+      {
         var recommendationDiv = document.getElementById('recommendationDiv');
-        //recommendationDiv.lastChild.addEventListener('click', );
-        //TODO| accepting suggestion
-
-        var map = mapService.directionsDisplay.getMap();
-        map.controls[google.maps.ControlPosition.TOP_LEFT].push(goBackDiv);
-        map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(nextPlaceDiv);
-        map.controls[google.maps.ControlPosition.LEFT_BOTTOM].push(recommendationDiv);
-
-        //TODO| make request to backend & display results in the elements with appropriate IDs
-
-        //TODO| handle error if destLocations is empty
-        mapService.getAndDisplayRoute(map, startLocation, destLocations[destIndex]);
+        var editSearchDiv = document.getElementById('editSearchDiv');
+        toggleBlockDisplay(recommendationDiv);
+        toggleBlockDisplay(editSearchDiv);
       }
 
-      function showNext(){
-        destIndex = (destIndex + 1) % destLocations.length;
-        mapService.getAndDisplayRoute(map, startLocation, destLocations[destIndex]);
+      function btn2_onClick()
+      {
+        toggleBlockDisplay(document.getElementById("sidebar"));
+      }
+
+      function onLoad() 
+      {
+        mapService = new MapService();
+        var map = mapService.directionsDisplay.getMap();
+        
+        // var goBackDiv = document.getElementById('goBackDiv');
+        var recommendationDiv = document.getElementById('recommendationDiv');
+        var editSearchDiv = document.getElementById('editSearchDiv');
+        var btn1 = document.getElementById('btn1');
+
+        if (getUrlQueryString() == "")
+        {
+          //TODO| This is "start location selection" mode
+          btn1.style.display = "none";
+          // goBackDiv.style.display = "none";
+          recommendationDiv.style.display = "none";
+          editSearchDiv.style.display = "block";
+        }
+        else 
+        {
+          queryParams = decodeQueryData(getUrlQueryString());
+          startLocation = parseLatLng(queryParams["location"]);
+          
+          btn1.style.display = "inline";
+          recommendationDiv.style.display = "block";
+          editSearchDiv.style.display = "none";
+          /* document.getElementById('goBackBtn').addEventListener('click', 
+            function() { location.href = getUrlRootPath(); }
+          ); */
+          document.getElementById('nextPlaceBtn').addEventListener('click', showNext);
+          document.getElementById('recommendationBtn').addEventListener('click', acceptSuggestion);
+          
+          // Note: a floating element that is not part of the maps embed will not be displayed on fullscreeen. Therefore we need to move the controls into the map.
+          /* map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(nextPlaceDiv);
+          map.controls[google.maps.ControlPosition.LEFT_BOTTOM].push(recommendationDiv); */
+
+          requestSuggestionResults();
+        }
       }
     </script>
   </body>

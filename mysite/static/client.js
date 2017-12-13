@@ -6,7 +6,6 @@
  * Builds query string from dictionary ("struct") fields.
  * @param {object} params - object containing query parameters as key-value pairs
  * @return {string} generated query string
- * @see https://stackoverflow.com/questions/111529/how-to-create-query-parameters-in-javascript
  */
 function encodeQueryData(params) {
   var result = [];
@@ -19,7 +18,6 @@ function encodeQueryData(params) {
  * Builds an object from query string
  * @param {string} search - query string
  * @return {object} object with fields generated from the key-value pairs of the query string
- * @see https://stackoverflow.com/questions/8648892/convert-url-parameters-to-a-javascript-object
  */
 function decodeQueryData(query) {
   var result = {};
@@ -49,6 +47,19 @@ function getUrlQueryString() {
   var u = window.location.href.split( '?' );
   if (u.length != 2) return null;
   else return u[1];
+}
+
+/**
+ * 
+ */
+function toggleBlockDisplay(element)
+{
+  var r;
+  switch (window.getComputedStyle(element).display) {
+    case "none": r = "block"; break;
+    default: r = "none"; break;
+  }
+  element.style.display = r;
 }
 
 
@@ -90,6 +101,15 @@ function parseLatLng(locstring)
   return new LatLng(lat, lng);
 }
 
+/**
+ * An object that describes search parameters (current location, preferences, etc.)
+ * @typedef {object} RecommenderParams
+ * @property {string} location - the start location
+ * @property {string} [distance] - the maximum distance, measured in meters; default is 8000
+ * @property {string} [when] - //TODO> as of this moment, only "time of day" is supported
+ * @property {string[]} [placeType] - //TODO
+ */
+
 
 // ----------------------------------------------------------------
 // UI/Frontend methods
@@ -97,38 +117,57 @@ function parseLatLng(locstring)
 
 /**
  * Generates request URL for the recommender backend
- * @param {Object} params - object containing query parameters (as key-value pairs) that describe search parameters (current location, preferences, etc.)
- * @return {string} request URL for the recommender backend
+ * @param {object} params
+ * @return {string}
  */
 function getRecommenderUrl(params) {
   return url = getUrlRootPath() + "api/suggest/?" + encodeQueryData(params);
 }
 
+/**
+ * Generates URL for the results page
+ * "window.location.href = getResultsPageUrl(getUserInput());"
+ * @param {object} params
+ * @return {string}
+ */
 function getResultsPageUrl(params) {
   return url = getUrlRootPath() + "main?" + encodeQueryData(params);
 }
 
-/**
- * 
- * Uses document state
- */
-function loadUserInput() {
-  if (document.getElementById("locationInput").value == "") {
-    alert("Please enter your location!");
-    //TODO| use something less intrusive
-    return;
-  }
 
+/**
+ * Converts user entered data in the input fields to an object
+ * Uses document state
+ * @return {RecommenderParams} object that describes search parameters (current location, preferences, etc.)
+ */
+function getUserInput() {
   var params = {};
   params["location"] = document.getElementById("locationInput").value;
-  params["radius"] = document.getElementById("distanceSelect").value;
-
-  window.location.href = getRecommenderUrl(params); // for testing only
-  //TODO
+  params["distance"] = document.getElementById("distanceSelect").value;
+  params["when"] = document.getElementById("hoursSelect").value;
+  
+  return params;
 }
 
+//TODO| validation/error-checking
+/* function validateUserInput(interactive) {
+  if (interactive === undefined) interactive = true; //default
+
+  if (document.getElementById("locationInput").value == "") {
+    if (interactive) alert("Please enter your location!");
+    return;
+  }
+  //e.g. max distance supported by Google Places is 50 km. Let's worry about converting to miles later. Maybe validation should be a separate thing.
+}*/
+
+//TODO| also need a method to set the input controls from current parameters (for, say, redirecting from/to the results page)
+
+//TODO| session storage when user clicks on "Show Map" in splash? (Rather than passing via query parameters)
+
+
 /**
- * 
+ * Retrieves place recommender suggestion results from backend
+ * No parameters; uses globals
  */
 function requestSuggestionResults() {
   var req = new XMLHttpRequest();
@@ -138,12 +177,52 @@ function requestSuggestionResults() {
   req.send();
 }
 
+/**
+ * Processes place recommender suggestion results retrieved from backend.
+ */
 function onSuggestionResultsLoad(req) {
-  if (req.readyState == XMLHttpRequest.DONE && xhr.status === 200) {
-    var json_response = JSON.parse(req.responseText);
+  if (req.readyState == XMLHttpRequest.DONE) {
+    if (xhr.status === 200) {
+      var j = JSON.parse(req.responseText);
+      //TODO|
+
+      //...
+
+      if (destLocationInfoArr.Length == 0)
+      {
+        //TODO| "no results found"
+      }
+      else
+      {
+        showNext(); // from -1 to 0
+      }
+    }
+    else {
+      getElementById("???").innerHTML = "ERROR: failed to retrieve data\n(" + xhr.status + ")";
+    }
   }
-  //TODO| handle errors
 }
+
+/**
+ * Displays the next suggestion in the queue.
+ */
+function showNext() {
+  if (destIndex + 1 == destLocationInfoArr.Length)
+  {
+    //TODO| append results from next page to end of array
+    //TODO| "no more results" if there are, well, no more results
+  }
+  destIndex = destIndex + 1;
+  mapService.getAndDisplayRoute(map, startLocation, destLocations[destIndex]);
+}
+
+/**
+ * 
+ */
+function acceptSuggestion() {
+  //TODO
+}
+
 
 /**
  * Encapsulates the Google Maps API
