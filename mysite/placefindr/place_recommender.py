@@ -14,7 +14,7 @@ class PlaceRecommender(object):
         Get places based on a location, radius, and a list of place types.
 
         :param location: String of the search location.
-        :param radius: Radius from the search location.
+        :param radius: Radius from the search location (type int).
         :param types: List of type strings supported by the Google Places api
                       suported types.
         :param pagetoken: pagetoken used to get more results from a previous
