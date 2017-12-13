@@ -20,6 +20,7 @@
         #sidebar { display: block; }
       }
       @media screen and (orientation: portrait) {
+        #btn2Div { display: block; }
         #sidebar { display: none; }
       }
     </style>
@@ -56,15 +57,17 @@
     </div>
 
     <script>
-      var queryParams = null;
+      var queryParams;
       
-      var startLocation = null;
-      var next_page_token = "";
+      var startLocation;
+      var next_page_token;
       var destIndex = -1;
       var destLocationInfoArr = []; //TODO|
       // TODO| maybe not strip the details from the json response? => views.py & client.js
 
       var mapService;
+
+      var startMarker;
 
       function btn1_onClick()
       {
@@ -84,14 +87,21 @@
         mapService = new MapService();
         var map = mapService.directionsDisplay.getMap();
         
-        // var goBackDiv = document.getElementById('goBackDiv');
         var recommendationDiv = document.getElementById('recommendationDiv');
         var editSearchDiv = document.getElementById('editSearchDiv');
         var btn1 = document.getElementById('btn1');
 
         if (getUrlQueryString() == "")
         {
-          //TODO| This is "start location selection" mode
+          google.maps.event.addListener(map, 'click', function(event) { 
+            var location = event.latLng;
+            if (startMarker)
+              removeMarker(startMarker);
+            startMarker = placeMarker(map, location);
+
+            editSearchDiv.contentWindow.document.getElementById('locationInput').value = location;
+          });
+
           btn1.style.display = "none";
           // goBackDiv.style.display = "none";
           recommendationDiv.style.display = "none";

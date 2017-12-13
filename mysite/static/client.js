@@ -279,5 +279,13 @@ function placeMarker(map, location)
       position: location, 
       map: map
   });
+  return marker;
 }
 
+/**
+ * 
+ */
+function removeMarker(marker)
+{
+  marker.setMap(null);
+}
