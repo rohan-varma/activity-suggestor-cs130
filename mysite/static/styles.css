@@ -32,40 +32,41 @@ body {
   bottom:0px;
 }
 
+div.Row, div.Row div {
+  padding: 0.1em;  
+}
+
 div.Row {
   width: 100%;
-  margin: 0;
-  padding: 0.1em;
   display: block;
-  white-space: nowrap;
-  text-align: center;
 }
 
-div.Row>div.Half {
-  width: 50%;
-  margin: 0;
-  padding: 0.1em;
-  display: inline-block;
-  white-space: nowrap;
-  text-align: left;
+@media screen and (orientation: landscape) 
+{
+  div.Row>div.Half { width: 50%; }
+  div.Row>div.Quarter { width: 25%; }
+  div.Row>div.ThreeQuarters { width: 75%; }
+
+  div.Row, div.Row div {
+    white-space: nowrap;
+  }
+  div.Row {
+    text-align: center;
+    display: block;
+  }
+  div.Row div {
+    display: inline-block;   
+    text-align: left; 
+  }
 }
 
-div.Row>div.Quarter {
-  width: 25%;
-  margin: 0;
-  padding: 0.1em;
-  display: inline-block;
-  white-space: nowrap;
-  text-align: left;
-}
-
-div.Row>div.ThreeQuarters {
-  width: 75%;
-  margin: 0;
-  padding: 0.1em;
-  display: inline-block;
-  white-space: nowrap;
-  text-align: left;
+@media screen and (orientation: portrait) 
+{
+  div.Row, div.Row div {
+    white-space: normal;
+    display: block;
+    text-align: center;
+  }
 }
 
 
@@ -131,10 +132,13 @@ p>img {
   vertical-align: middle;
 }
 
+iframe {
+  border: 0;
+}
+
 fieldset {
   border: none;
   margin: 20px auto;
-  width: 50em;
 }
 
 .paramInput {
@@ -158,23 +162,23 @@ fieldset {
 }
 
 
-/*//TODO|*/
-
-@media screen and (min-width: 700px) {
+@media screen and (orientation: landscape) {
   #sidebar {
     float: left;
     width: 30%;
+    height: 100%;
     margin: 0;
   }
 
   #contentbody {
     float: right;
     width: 70%;
+    height: 100%;
     margin: 0;
   }
 }
 
-@media screen and (max-width: 699px) and (min-width: 520px) {
+@media screen and (orientation: portrait) {
   #sidebar,
   #content {
     float: none;

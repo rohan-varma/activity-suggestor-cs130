@@ -11,19 +11,18 @@
         font-family: "ITC Avant Garde Std", sans-serif;
       }
     </style>
+    <link rel="shortcut icon" type="image/x-icon" href="/static/images/favicon.ico"/>
     <link rel="stylesheet" type="text/css" href="/static/styles.css"/>
     <link rel="stylesheet" type="text/css" href="/static/fonts/ITCAvantGardeStd.css"/>
-    <!-- <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Quicksand"> -->
     <script type="text/javascript" src="static/client.js"></script>
-    <link rel="shortcut icon" type="image/x-icon" href="/static/images/favicon.ico"/>
   </head>
-  <body>
+  <body onload="onLoad()">
     <p id="title">
       <img id="icon" src="/static/images/icon.png"/>
       PlaceFindr
     </p>
 
-    <form class="mainPanel" onsubmit="showResults()">
+    <form class="mainPanel" onsubmit="showResults()" style="max-width:50em">
       <!--TODO| onsubmit-->
       <div style="width: 100%" class="Med"><fieldset style="max-width: 500px">
         <div class="Row">
@@ -38,18 +37,18 @@
           </div>
         </div>
       </fieldset></div>
-      <div style="width: 100%" class="Small"><fieldset style="width: 500px">  
+      <div style="width: 100%" class="Small"><fieldset style="max-width: 500px">  
         <div class="Row">
           <div class="Half">
             <label class="paramLabel">What kind of place?</label>
           </div>
           <div class="Half">
-            <select id="entertainment" class="paramInput">
-              <!--TODO-->
+            <select id="placeType" class="paramInput" multiple>
               <option value="all">All</option>
-              <!--<option value="group">For groups</option>
-                  <option value="date">For a date</option>
-                  <option value="single">For yourself</option> -->
+              <option value="restaurants">Restaurants</option>
+              <option value="museums">Museums</option>
+              <!--This is becoming harder than I imagined, since we can't just dump 70 or so options into the box & pretend it's done; even worse because Google does not describe any sort of hierarchy between these categories, unlike Yelp which has some umbrella "catch-all" categories-->
+              <!--TODO-->
             </select>
           </div>
         </div>
@@ -60,8 +59,6 @@
           <div class="Half">
             <input id="distanceSelect" class="paramInput" type="number" step="10" min="0" max="50000"/>
           </div>
-          <!-- TODO| max distance supported by Google Places is 50 km. Let's worry about converting to miles later. -->
-          <br/>
         </div>
         <div class="Row">
           <div class="Half">
@@ -71,16 +68,22 @@
             <select id="hoursSelect" class="paramInput">
               <option value="any">Don't care</option>
               <option value="now">Open now</option>
+              <!--//TODO|--><!--TODO| need to be able to choose hours-->
+              <option value="17">5pm</option>
+              <option value="18">6pm</option>
             </select>
           </div>
-          <br/>
         </div>
-        <!--TODO| need to be able to choose hours-->
-        <!--TODO| consider adding a "show map" button-->
       </fieldset></div>
       <div class="Large">
         <input type="submit" class="paramInput square lightgrey" value="Get suggestions">
       </div>
     </form>
+    <script>
+      function onLoad() {
+        if (decodeQueryData(getUrlQueryString()).noheader == "1")
+          document.getElementById("title").style.display = "none";
+      }
+    </script>
   </body>
 </html>
