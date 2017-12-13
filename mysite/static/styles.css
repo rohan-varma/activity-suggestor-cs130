@@ -8,7 +8,7 @@ body {
   padding: 0;
   color: #4A4A4A;
   font-size: 12px;
-  line-height: 1em;
+  line-height: 2em;
 }
 
 
@@ -153,6 +153,7 @@ fieldset {
   margin: 0;
   padding: 0.2em;
   display: inline-block;
+  vertical-align: top;
 }
 
 .Row .paramInput.button {

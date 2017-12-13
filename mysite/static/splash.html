@@ -22,7 +22,7 @@
       PlaceFindr
     </p>
 
-    <form class="mainPanel" onsubmit="showResults()" style="max-width:50em">
+    <form class="mainPanel" style="max-width:50em">
       <!--TODO| onsubmit-->
       <div style="width: 100%" class="Med"><fieldset style="max-width: 500px">
         <div class="Row">
@@ -32,8 +32,8 @@
           <div class="ThreeQuarters">
             <input id="locationInput" class="paramInput" type="text" required placeholder="address or ZIP code"/>
           </div>
-            <div class="Quarter">
-            <input type="button" class="paramInput button square lightgrey" value="Show map">
+            <div id="showMapBtnDiv" class="Quarter">
+            <input type="button" class="paramInput button square lightgrey" value="Show map" onclick="showMap()">
           </div>
         </div>
       </fieldset></div>
@@ -76,13 +76,26 @@
         </div>
       </fieldset></div>
       <div class="Large">
-        <input type="submit" class="paramInput square lightgrey" value="Get suggestions">
+        <!--type="submit" - removed because that's too complicated; using onclick for now -->
+        <input class="paramInput square lightgrey" value="Get suggestions" onclick="showResults()">
       </div>
     </form>
     <script>
       function onLoad() {
-        if (decodeQueryData(getUrlQueryString()).noheader == "1")
+        var params = decodeQueryData(getUrlQueryString());
+        if (params.noheader == "1")
           document.getElementById("title").style.display = "none";
+        if (params.embed == "1")
+        {
+          document.getElementById("showMapBtnDiv").style.display = "none";
+          //TODO| check sessionStorage
+        }
+      }
+      function showResults() {
+        window.top.location.href = getResultsPageUrl(getUserInput());
+      }
+      function showMap() {
+        //TODO| redirect to map page while preserving input fields via sessionStorage
       }
     </script>
   </body>
