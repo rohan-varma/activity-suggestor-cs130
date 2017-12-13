@@ -37,6 +37,7 @@ function getUrlRootPath() {
   var protocol = pathArray[0];
   var host = pathArray[2];
   return protocol + '//' + host + "/";
+  //*| the most idiomatic solution is to use Location.origin + "/"; however, some browsers don't support it
 }
 
 /**
@@ -44,9 +45,7 @@ function getUrlRootPath() {
  * @return {string}
  */
 function getUrlQueryString() {
-  var u = window.location.href.split( '?' );
-  if (u.length != 2) return null;
-  else return u[1];
+  return window.location.search.slice(1);
 }
 
 /**
@@ -269,5 +268,16 @@ function (startLocation, destLocation, travelMode)
       }
     }
   );
+}
+
+/**
+ * @see https://developers.google.com/maps/documentation/javascript/events#EventArguments
+ */
+function placeMarker(map, location) 
+{
+  var marker = new google.maps.Marker({
+      position: location, 
+      map: map
+  });
 }
 
