@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
-import numpy as np
 from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
 from django.http import HttpResponseBadRequest, HttpResponseServerError
