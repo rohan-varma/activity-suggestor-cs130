@@ -58,6 +58,17 @@ URLs
 
 
 
+## Database stuff
+
+Docs/source: https://docs.djangoproject.com/en/2.0/intro/tutorial02/#database-setup
+
+Run migrations: python3 manage.py makemigrations placefindr
+
+View migration: python3 manage.py sqlmigrate placefindr 0001
+
+
+
+
 ## Testing
 
     ########
