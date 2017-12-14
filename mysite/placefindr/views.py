@@ -7,7 +7,8 @@ from django.http import HttpResponseBadRequest, HttpResponseServerError
 from django.http import Http404 # django's http status codes
 from urllib.parse import parse_qsl
 import json
-import urllib
+import urllib   
+from .models import RecommendedPlace
 
 from django.template import loader
 
@@ -105,7 +106,8 @@ def suggest(request):
     example_place = google_places[len(google_places)-1] if google_places else None
     if example_place:
         example_place.get_details() # makes another api call
-
+    rp = RecommendedPlace(place_name = 'Place1', place_ranking = 5, num_times_shared = 0)
+    rp.save()   
     #places_result.raw_response['results'] is a list where each element is a dict describing the place
     # match on that
     context = {
