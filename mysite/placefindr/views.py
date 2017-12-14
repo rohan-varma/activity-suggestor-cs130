@@ -8,7 +8,7 @@ from urllib.parse import parse_qsl
 import json
 import urllib   
 from .models import RecommendedPlace
-
+from random import shuffle
 from django.template import loader
 
 # import .sharer
@@ -105,7 +105,8 @@ def suggest(request):
     for p1, p2 in zip(google_places, places_result.raw_response['results']):
         print(p1.name)
         print(p2['name'])
-
+    shuffle(google_places)
+    shuffle(places_result.raw_response['results'])
     google_places = google_places[:15 if 15 < len(places_result.places) else len(google_places)]
     places_result.raw_response['results'] = places_result.raw_response['results'][:15 if 15 < len(places_result.raw_response['results']) else len(places_result.raw_response['results'])]
     assert len(google_places) <= 15, "houston we have a problem"
