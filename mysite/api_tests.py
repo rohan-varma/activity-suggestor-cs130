@@ -35,5 +35,5 @@ def test_type_input():
 
 
 if __name__ == '__main__':
-	test_basic_call()
+	#test_basic_call()
 	test_type_input()
