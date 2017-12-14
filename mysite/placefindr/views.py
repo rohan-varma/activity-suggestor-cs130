@@ -40,11 +40,6 @@ def share(request, sharing_method):
         return HttpResponseBadRequest('')
 
 
-def decimal_default(obj):
-    if isinstance(obj, decimal.Decimal):
-        return float(obj)
-    raise TypeError
-
 def get_types_from_request(query_dict):
     if 'types' not in query_dict:
         return []
@@ -75,8 +70,9 @@ def suggest(request):
         if 'location' not in query_dict:
             raise Http404('No location input.')
         location = query_dict['location']
-        radius = int(query_dict['radius']) if 'radius' in query_dict else 8000  # 5 Miles
-        types = query_dict['types'] if 'types' in query_dict else []
+        radius = get_radius_from_request(query_dict)
+        types = get_types_from_request(query_dict)
+        print('searching with loc {} radius {} and type {}'.format(location, radius, types))
         places = recommender.get_places(location=location,
                                        radius=radius,
                                        types=types)
