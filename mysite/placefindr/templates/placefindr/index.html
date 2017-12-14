@@ -44,31 +44,41 @@
 
       // we can't have a array of LatLng objects unless it's populated in an async function D:
       // var latlngArray = [];
-      var lat = []
-      var lng = []
+      var lat = [];
+      var lng = [];
       var names = [];
       var formatted_addresses = [];
       var next_page_token = "";
+      var ratings = [];
+      var phones = [];
 
       // load context
       {% if raw_response %}
 
         var next_page_token = "{{raw_response.next_page_token}}";
+        console.log("{{raw_response}}");
         {% for r in raw_response.results %}
           lat.push({{r.geometry.location.lat}});
           lng.push({{r.geometry.location.lng}});
           names.push("{{ r.name }}");
-          formatted_addresses.push("{{r.formatted_address}}")
+          formatted_addresses.push("{{r.formatted_address}}");
+          ratings.push("{{r.rating}}");
+          phones.push("{{r.phone}}");
         {% endfor %}
         source_lat = lat[0];
         source_lng = lng[0];
         lat.shift();
         lng.shift();
         names.shift();
+        formatted_addresses.shift();
+        ratings.shift();
+        phones.shift();
       {% else %}
 
       {% endif %}
+
       //console.log(raw_response.next_page_token);
+
       function GoBack(controlDiv, map) {
         var controlUI = document.createElement('div');
         controlUI.className = "buttonbase";
@@ -95,10 +105,11 @@
         var locationTitle = document.createElement('p');
         locationTitle.innerHTML = names[destIndex];
         var address = document.createElement('p');
-        //address.innerHTML = "Address Information";
         address.innerHTML = formatted_addresses[destIndex];
-        var hours = document.createElement('p');
-        hours.innerHTML = "Open: 1pm - 2pm";
+        var rating = document.createElement('p');
+        rating.innerHTML = "Rating: " + ratings[destIndex];
+        var phone = document.createElement('p');
+        phone.innerHTML = "Phone: " + phones[destIndex];
 
         var share = document.createElement('button');
         share.innerHTML = 'Share with Friends';
@@ -106,14 +117,15 @@
         controlUI.appendChild(header);
         controlUI.appendChild(locationTitle);
         controlUI.appendChild(address);
-        controlUI.appendChild(hours);
+        controlUI.appendChild(rating);
+        controlUI.appendChild(phone);
         controlUI.appendChild(br);
         controlUI.appendChild(share);
         controlDiv.appendChild(controlUI);
 
         controlUI.addEventListener('click', function() {
           //go to next destination in array
-          //map.setCenter(chicago);
+          map.setCenter(chicago);
         });
       }
 
