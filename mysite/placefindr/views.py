@@ -80,6 +80,8 @@ def suggest(request):
 
     template = loader.get_template('placefindr/index.html')
     #raw_response = json.dumps(places.raw_response)
+    print('RAW RESPONSE FOLLOWS')
+    print(places.raw_response)
     context = {
         #'raw_response': JsonResponse(places.raw_response)
         #'raw_response': d,
