@@ -10,10 +10,20 @@ from .helpers import get_types_from_request, get_radius_from_request
 class HelperTests(TestCase):
 
     def test_get_types_from_request(self):
-        pass
+        test_query_dict = {'location': 'West Hollywood, CA, United States', 'open': 'true', 'radius': '50', 'types': 'amusement_park,cafe,campground,casino,clothing_store,department_store,library,movie_theater,movie_rental,night_club,park,restaurant,shopping_mall,zoo'}
+        types = get_types_from_request(test_query_dict)
+        assert isinstance(types, list)
+        assert types == test_query_dict['types'].split(',')
+        del test_query_dict['types']
+        assert get_types_from_request(test_query_dict) == []
 
     def test_get_radius_from_request(self):
-        pass
+        test_query_dict = {'location': 'West Hollywood, CA, United States', 'open': 'true', 'radius': '50'}
+        radius = get_radius_from_request(test_query_dict)
+        assert radius == 50, "radius is actually {}".format(radius)
+        del test_query_dict['radius']
+        radius = get_radius_from_request(test_query_dict)
+        assert radius == 8000, "radius is actually {}".format(radius)
 
 class PlaceRecommenderTests(TestCase):
 
