@@ -134,10 +134,11 @@
        url += "?location=";
        url += document.getElementById("autocomplete").value;
        if(document.getElementById("distanceSelect").value != "none"){
-            url += "?radius=";
+            url += "&radius=";
             url += document.getElementById("distanceSelect").value;
+            url +="&open=true"
        }
-       location.href = url;
+       location.href = encodeURI(url);
      }
      else{
        alert("Please enter a proper location!")
