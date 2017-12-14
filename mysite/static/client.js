@@ -68,10 +68,12 @@ function toggleBlockDisplay(element)
 
 /**
  * Structure that stores geographical coordinates
- * @class LatLng
+ * @typedef {object} LatLng
  * @property {number} lat
  * @property {number} lng
  */
+
+// TODO| theres no point in making this a constructed object right now (since it doesn't interop with Google's anyway)
 function LatLng(lat, lng) {
   this.lat = lat;
   this.lng = lng;
@@ -98,6 +100,16 @@ function parseLatLng(locstring)
     return null;
   
   return new LatLng(lat, lng);
+}
+
+/**
+ * 
+ */
+function printLatLng(latlng)
+{
+  if (latlng == null)
+    return null;
+  return latlng.lat.toString() + "," + latlng.lng.toString();
 }
 
 /**
@@ -171,8 +183,8 @@ function getUserInput() {
 function requestSuggestionResults() {
   var req = new XMLHttpRequest();
   req.onreadystatechange = onSuggestionResultsLoad.bind(null, req);
-  //req.responseText = "json"; // Me: "JSON! Yay! (Five minutes later) aw crap. No support in Internet Explorer or Edge."
-  req.open("GET", getRecommenderUrl(suggestionPreferences));
+  req.open("GET", getRecommenderUrl(queryParams));
+  //TODO| might need to clean up the param fields if other options are added in the future
   req.send();
 }
 
@@ -181,23 +193,66 @@ function requestSuggestionResults() {
  */
 function onSuggestionResultsLoad(req) {
   if (req.readyState == XMLHttpRequest.DONE) {
-    if (xhr.status === 200) {
+    if (req.status === 200) {
       var j = JSON.parse(req.responseText);
-      //TODO|
+      destLocationInfoArr = j.results;
+      nextPageToken = j.next_page_token;
 
-      //...
-
-      if (destLocationInfoArr.Length == 0)
+      if (destLocationInfoArr.length == 0)
       {
         //TODO| "no results found"
+        ;
       }
       else
-      {
         showNext(); // from -1 to 0
       }
     }
     else {
-      getElementById("???").innerHTML = "ERROR: failed to retrieve data\n(" + xhr.status + ")";
+      document.getElementById("???").innerHTML = "ERROR: failed to retrieve data\n(" + req.status + ")";
+    }
+  }
+}
+
+/**
+ * Requests the next page of results
+ * //TODO| this might not actually be the intended behavior
+ */
+function requestSuggestionResultsNextPage() {
+  if (nextPageToken == null) {
+    //TODO| show "no more results" warning
+    return false;
+  }
+  var req = new XMLHttpRequest();
+  req.onreadystatechange = onSuggestionResultsNextPageLoad.bind(null, req);
+  req.open("GET", getRecommenderUrl({pagetoken: next_page_token}));
+  req.send();
+  return true;
+}
+
+function onSuggestionResultsNextPageLoad(req) {
+  if (req.readyState == XMLHttpRequest.DONE) {
+    var increment_count = 0;
+    if (req.status === 200) {
+      var j = JSON.parse(req.responseText);
+      try {
+        destLocationInfoArr = destLocationInfoArr.concat(j.results);
+        nextPageToken = j.next_page_token;
+        increment_count = j.results.length;
+      }
+      catch (e) {
+        nextPageToken = null;
+      }
+
+      if (increment_count == 0)
+      {
+        //TODO| "something happened"
+        ;
+      }
+      else
+        showNext();
+    }
+    else {
+      document.getElementById("???").innerHTML = "ERROR: failed to retrieve data\n(" + req.status + ")";
     }
   }
 }
@@ -206,13 +261,28 @@ function onSuggestionResultsLoad(req) {
  * Displays the next suggestion in the queue.
  */
 function showNext() {
-  if (destIndex + 1 == destLocationInfoArr.Length)
+  if (destIndex + 1 == destLocationInfoArr.length)
   {
-    //TODO| append results from next page to end of array
-    //TODO| "no more results" if there are, well, no more results
+    requestSuggestionResultsNextPage();
   }
-  destIndex = destIndex + 1;
-  mapService.getAndDisplayRoute(map, startLocation, destLocations[destIndex]);
+  else
+  {
+    destIndex = destIndex + 1;
+    var curDestLocation = destLocationInfoArr[destIndex];
+    mapService.getAndDisplayRoute(startLocation, curDestLocation.geometry.location, travelMode);
+
+    document.getElementById('selLocName').textContent = curDestLocation.name;
+    document.getElementById('selLocAddr').textContent = curDestLocation.formatted_address;
+    document.getElementById('selLocLatLng').textContent = printLatLng(curDestLocation.geometry.location);
+    document.getElementById('selLocHours').textContent =
+      curDestLocation.permanently_closed ?
+        "Permanently closed":
+        ((curDestLocation.opening_hours && curDestLocation.opening_hours.open_now) ?
+          "Open ???" :
+          "Closed right now"
+          //TODO
+        );
+  }
 }
 
 /**
@@ -253,6 +323,7 @@ function MapService()
 MapService.prototype.getAndDisplayRoute = 
 function (startLocation, destLocation, travelMode) 
 {
+  var self_capture = this;
   this.directionsService.route(
     {
       origin: new google.maps.LatLng(startLocation.lat, startLocation.lng),
@@ -262,7 +333,7 @@ function (startLocation, destLocation, travelMode)
     function(response, status) 
     {
       if (status === 'OK') {
-        this.directionsDisplay.setDirections(response);
+        self_capture.directionsDisplay.setDirections(response);
       } else {
         window.alert('Directions request failed due to ' + status);
       }

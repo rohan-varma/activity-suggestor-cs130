@@ -34,7 +34,6 @@
     </div>
     <div id="sidebar">
       <div class="Row">
-        <!--TODO| expand/collapse controls, similar to "go back"-->
         <button id="btn1" class="paramInput square lightgrey" onclick="btn1_onClick()"/>
       </div>
       <div id="sidebarContent" style="width:100%;height:100%">
@@ -58,12 +57,14 @@
 
     <script>
       var queryParams;
+      //TODO| might need to clean up the param fields if other options are added in the future
       
       var startLocation;
-      var next_page_token;
+      var nextPageToken;
       var destIndex = -1;
-      var destLocationInfoArr = []; //TODO|
-      // TODO| maybe not strip the details from the json response? => views.py & client.js
+      var destLocationInfoArr = [];
+
+      var travelMode = "DRIVING";//TODO|
 
       var mapService;
 
@@ -103,29 +104,43 @@
           });
 
           btn1.style.display = "none";
-          // goBackDiv.style.display = "none";
           recommendationDiv.style.display = "none";
           editSearchDiv.style.display = "block";
+          editSearchDiv.contentWindow.document.getElementById('locationInput').readOnly = true;
         }
         else 
         {
           queryParams = decodeQueryData(getUrlQueryString());
-          startLocation = parseLatLng(queryParams["location"]);
-          
-          btn1.style.display = "inline";
-          recommendationDiv.style.display = "block";
-          editSearchDiv.style.display = "none";
-          /* document.getElementById('goBackBtn').addEventListener('click', 
-            function() { location.href = getUrlRootPath(); }
-          ); */
-          document.getElementById('nextPlaceBtn').addEventListener('click', showNext);
-          document.getElementById('recommendationBtn').addEventListener('click', acceptSuggestion);
-          
-          // Note: a floating element that is not part of the maps embed will not be displayed on fullscreeen. Therefore we need to move the controls into the map.
-          /* map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(nextPlaceDiv);
-          map.controls[google.maps.ControlPosition.LEFT_BOTTOM].push(recommendationDiv); */
 
-          requestSuggestionResults();
+          function onLoad_PostProcessing()
+          {
+            map.setCenter(startLocation);
+            btn1.style.display = "inline";
+            recommendationDiv.style.display = "block";
+            editSearchDiv.style.display = "none";
+            document.getElementById('nextPlaceBtn').addEventListener('click', showNext);
+            document.getElementById('recommendationBtn').addEventListener('click', acceptSuggestion);
+            requestSuggestionResults();
+          }
+
+          startLocation = parseLatLng(queryParams["location"]);
+          if (!startLocation) {
+            //FIXME| geocoding to get the actual location (since location might not be a latlng string but a name e.g. "UCLA")
+            var geocoder = new google.maps.Geocoder();
+            geocoder.geocode({address: queryParams["location"]}, 
+            function(results, status) {
+              if (results.length == 0)
+              {
+                //TODO| 
+              }
+              var gr = results[0].geometry.location;
+              startLocation = new LatLng(gr.lat(), gr.lng());
+              onLoad_PostProcessing();
+            });
+          }
+
+          else
+            onLoad_PostProcessing();
         }
       }
     </script>
