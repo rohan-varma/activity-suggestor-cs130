@@ -47,17 +47,18 @@
       var lat = []
       var lng = []
       var names = [];
+      var formatted_addresses = [];
       var next_page_token = "";
 
       // load context
       {% if raw_response %}
 
         var next_page_token = "{{raw_response.next_page_token}}";
-        console.log("{{raw_response}}");
         {% for r in raw_response.results %}
           lat.push({{r.geometry.location.lat}});
           lng.push({{r.geometry.location.lng}});
           names.push("{{ r.name }}");
+          formatted_addresses.push("{{r.formatted_address}}")
         {% endfor %}
         source_lat = lat[0];
         source_lng = lng[0];
@@ -67,9 +68,8 @@
       {% else %}
 
       {% endif %}
-
       //console.log(raw_response.next_page_token);
-
+      console.log(formatted_addresses)
       function GoBack(controlDiv, map) {
         var controlUI = document.createElement('div');
         controlUI.className = "buttonbase";
@@ -96,7 +96,8 @@
         var locationTitle = document.createElement('p');
         locationTitle.innerHTML = names[destIndex];
         var address = document.createElement('p');
-        address.innerHTML = "Address Information";
+        //address.innerHTML = "Address Information";
+        address.innerHTML = formatted_addresses[destIndex];
         var hours = document.createElement('p');
         hours.innerHTML = "Open: 1pm - 2pm";
 
