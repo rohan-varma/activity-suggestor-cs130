@@ -178,6 +178,9 @@
             url += "&radius=";
             url += document.getElementById("distanceSelect").value;
             url +="&open=true"
+       } else {
+        url +="&radius=10";
+        url += "&open=true";
        }
        var entertainment = document.getElementById("entertainment");
        var entertainmentchoice = entertainment.options[entertainment.selectedIndex].value;

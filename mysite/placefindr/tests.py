@@ -5,6 +5,16 @@ from django.test import TestCase
 
 from .place_recommender import PlaceRecommender
 
+from .helpers import get_types_from_request, get_radius_from_request
+
+class HelperTests(TestCase):
+
+    def test_get_types_from_request(self):
+        pass
+
+    def test_get_radius_from_request(self):
+        pass
+
 class PlaceRecommenderTests(TestCase):
 
     def test_gets_location_results_from_location_and_token(self):
@@ -22,6 +32,7 @@ class PlaceRecommenderTests(TestCase):
         except TypeError:
             pass # we should err when radius wasn't parse
 
+### Example of a mutation test, if you take out line 25 in place_recommender.py then this test will break
     def test_radius_empty(self):
         # if the user did not specify any radius, a sensible default option should be used, and it should not error out
         recommender = PlaceRecommender()
