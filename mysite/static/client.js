@@ -103,7 +103,9 @@ function parseLatLng(locstring)
 }
 
 /**
- * 
+ * Prints a textual representation of a LatLng object.
+ * @param {LatLng} latlng
+ * @return {string}
  */
 function printLatLng(latlng)
 {
@@ -137,7 +139,6 @@ function getRecommenderUrl(params) {
 
 /**
  * Generates URL for the results page
- * "window.location.href = getResultsPageUrl(getUserInput());"
  * @param {object} params
  * @return {string}
  */
@@ -183,9 +184,17 @@ function getUserInput() {
 function requestSuggestionResults() {
   var req = new XMLHttpRequest();
   req.onreadystatechange = onSuggestionResultsLoad.bind(null, req);
-  req.open("GET", getRecommenderUrl(queryParams));
-  //TODO| might need to clean up the param fields if other options are added in the future
+  req.open("GET", getRecommenderUrl(searchParams));
   req.send();
+}
+
+/**
+ * 
+ */
+function setResultsErrorState(lock, err_string) {
+  document.getElementById("recDetails").style.display = "none";
+  document.getElementById("errMessage").style.display = "block";
+  document.getElementById("errMessage").textContent = err_string;
 }
 
 /**
@@ -196,18 +205,16 @@ function onSuggestionResultsLoad(req) {
     if (req.status === 200) {
       var j = JSON.parse(req.responseText);
       destLocationInfoArr = j.results;
-      nextPageToken = j.next_page_token;
+      if (j.next_page_token)
+        nextPageToken = j.next_page_token;
 
       if (destLocationInfoArr.length == 0)
-      {
-        //TODO| "no results found"
-        ;
-      }
+        setResultsErrorState(true, "No results found.");
       else
         showNext(); // from -1 to 0
     }
     else {
-      document.getElementById("???").innerHTML = "ERROR: failed to retrieve data\n(" + req.status + ")";
+      document.getElementById("selLocName").innerHTML = "ERROR: failed to retrieve data\n(" + req.status + ")";
     }
   }
 }
@@ -217,13 +224,13 @@ function onSuggestionResultsLoad(req) {
  * //TODO| this might not actually be the intended behavior
  */
 function requestSuggestionResultsNextPage() {
-  if (nextPageToken == null) {
-    //TODO| show "no more results" warning
+  if (!nextPageToken) {
+    setResultsErrorState(false, "No more results.");
     return false;
   }
   var req = new XMLHttpRequest();
   req.onreadystatechange = onSuggestionResultsNextPageLoad.bind(null, req);
-  req.open("GET", getRecommenderUrl({pagetoken: next_page_token}));
+  req.open("GET", getRecommenderUrl({pagetoken: nextPageToken}));
   req.send();
   return true;
 }
@@ -244,15 +251,29 @@ function onSuggestionResultsNextPageLoad(req) {
 
       if (increment_count == 0)
       {
-        //TODO| "something happened"
+        setResultsErrorState(false, "No more results");
         ;
       }
       else
         showNext();
     }
     else {
-      document.getElementById("???").innerHTML = "ERROR: failed to retrieve data\n(" + req.status + ")";
+      setResultsErrorState(false, "ERROR: failed to retrieve data\n(" + req.status + ")");
     }
+  }
+}
+
+function checkConstraints(placeInfo) {
+  switch (searchParams.when)
+  {
+    case "any":
+      return true;
+    break;
+    case "now":
+      return (placeInfo.opening_hours !== undefined) && (placeInfo.opening_hours.open_now === true);
+    break;
+    default:
+      return true;
   }
 }
 
@@ -267,20 +288,25 @@ function showNext() {
   else
   {
     destIndex = destIndex + 1;
-    var curDestLocation = destLocationInfoArr[destIndex];
-    mapService.getAndDisplayRoute(startLocation, curDestLocation.geometry.location, travelMode);
 
-    document.getElementById('selLocName').textContent = curDestLocation.name;
-    document.getElementById('selLocAddr').textContent = curDestLocation.formatted_address;
-    document.getElementById('selLocLatLng').textContent = printLatLng(curDestLocation.geometry.location);
-    document.getElementById('selLocHours').textContent =
-      curDestLocation.permanently_closed ?
-        "Permanently closed":
-        ((curDestLocation.opening_hours && curDestLocation.opening_hours.open_now) ?
-          "Open ???" :
-          "Closed right now"
-          //TODO
-        );
+    if (checkConstraints(destLocationInfoArr[destIndex]))
+    {
+      var curDestLocation = destLocationInfoArr[destIndex];
+      mapService.getAndDisplayRoute(startLocation, curDestLocation.geometry.location, travelMode);
+
+      document.getElementById('selLocName').textContent = curDestLocation.name;
+      document.getElementById('selLocAddr').textContent = curDestLocation.formatted_address;
+      document.getElementById('selLocLatLng').textContent = printLatLng(curDestLocation.geometry.location);
+      document.getElementById('selLocHours').textContent =
+        curDestLocation.permanently_closed ?
+          "Permanently closed":
+          ((curDestLocation.opening_hours && curDestLocation.opening_hours.open_now) ?
+            "Open right now" :
+            "Closed right now"
+          );
+    }
+    else
+      showNext();
   }
 }
 
@@ -317,7 +343,7 @@ function MapService()
  * @memberof MapService
  * @param {LatLng} startLocation
  * @param {LatLng} destLocation
- * @param {string} travelMode - DRIVING, ... etc. <TODO>
+ * @param {string} travelMode - DRIVING, ... etc.
  */
 MapService.prototype.getAndDisplayRoute = 
 function (startLocation, destLocation, travelMode) 

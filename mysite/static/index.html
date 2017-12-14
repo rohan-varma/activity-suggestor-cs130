@@ -39,14 +39,18 @@
       <div id="sidebarContent" style="width:100%;height:100%">
         <iframe id="editSearchDiv" src="/splash?noheader=1&embed=1" style="width:100%;height:100%"></iframe>
         <div id="recommendationDiv" style="width:100%;height:100%" class="light square Med">
-          <p class="Small">How about</p>
-          <p class="Med" id="selLocName">TODO: place name</p>
-          <p class="Small" id="selLocAddr">TODO: address</p>
-          <p class="Small" id="selLocLatLng">TODO: GPS coordinates</p>
-          <p class="Small" id="selLocHours">TODO: business hours</p>
-          <p class="Med">Do you wish to accept the recommendation? You can choose to send a link via text or email.</p>
-          <button class="darkgrey round Med" id="recommendationBtn">Sounds great!</button>
-          <button class="darkgrey round Med" id="nextPlaceBtn">Try Somewhere Else</button>
+          <p class="Med" id="errMessage" style="display:none">[TODO: error message]</p>
+          <div id="recDetails" style="width:100%">
+            <p class="Small">How about</p>
+            <!-- <input type="" -->
+            <p class="Med" id="selLocName">[TODO: place name]</p>
+            <p class="Small" id="selLocAddr">[TODO: address]</p>
+            <p class="Small" id="selLocLatLng">[TODO: GPS coordinates]</p>
+            <p class="Small" id="selLocHours">[TODO: business hours]</p>
+            <p class="Med">Do you wish to accept the recommendation? You can choose to send a link via text or email.</p>
+            <button class="lightgrey square Med" id="recommendationBtn">Sounds great!</button>
+            <button class="lightgrey square Med" id="nextPlaceBtn">Try Somewhere Else</button>
+          </div>
         </div>
       </div>
     
@@ -56,7 +60,7 @@
     </div>
 
     <script>
-      var queryParams;
+      var searchParams;
       //TODO| might need to clean up the param fields if other options are added in the future
       
       var startLocation;
@@ -110,37 +114,45 @@
         }
         else 
         {
-          queryParams = decodeQueryData(getUrlQueryString());
+          searchParams = decodeQueryData(getUrlQueryString());
 
-          function onLoad_PostProcessing()
+          function onLoad_PostProcessing(success)
           {
-            map.setCenter(startLocation);
+            if (success)
+              map.setCenter(startLocation);
+
             btn1.style.display = "inline";
             recommendationDiv.style.display = "block";
             editSearchDiv.style.display = "none";
             document.getElementById('nextPlaceBtn').addEventListener('click', showNext);
             document.getElementById('recommendationBtn').addEventListener('click', acceptSuggestion);
-            requestSuggestionResults();
+
+            if (success)
+              requestSuggestionResults();
           }
 
-          startLocation = parseLatLng(queryParams["location"]);
+          startLocation = parseLatLng(searchParams["location"]);
           if (!startLocation) {
-            //FIXME| geocoding to get the actual location (since location might not be a latlng string but a name e.g. "UCLA")
             var geocoder = new google.maps.Geocoder();
-            geocoder.geocode({address: queryParams["location"]}, 
+            geocoder.geocode({address: searchParams["location"]}, 
             function(results, status) {
               if (results.length == 0)
               {
-                //TODO| 
+                onLoad_PostProcessing(false);
+                setResultsErrorState(true, "Error: the specified location cannot be found.");
+                //TODO| consider showing this in the redirect back to splash & use sessionStorage
               }
-              var gr = results[0].geometry.location;
-              startLocation = new LatLng(gr.lat(), gr.lng());
-              onLoad_PostProcessing();
+              else
+              {
+                var gr = results[0].geometry.location;
+                startLocation = new LatLng(gr.lat(), gr.lng());
+                onLoad_PostProcessing(true);
+              }
             });
           }
 
           else
-            onLoad_PostProcessing();
+            onLoad_PostProcessing(true);
         }
       }
     </script>

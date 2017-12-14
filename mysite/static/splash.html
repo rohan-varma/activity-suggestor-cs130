@@ -80,7 +80,6 @@
     </form>
     <script>
       var autocomplete;
-      var mapService;
       function onLoad() {
         var params = decodeQueryData(getUrlQueryString());
         if (params.noheader == "1")
@@ -95,7 +94,7 @@
           (document.getElementById('locationInput')),
           //{types: ['address']}
         );
-        autocomplete.addListener('place_changed', getLatLng);
+        // autocomplete.addListener('place_changed', getLatLng);
       }
       function showResults() {
         window.top.location.href = getResultsPageUrl(getUserInput());
@@ -106,11 +105,11 @@
         window.top.location.href = getResultsPageUrl({});
       }
 
-      function getLatLng(){
+      /* function getLatLng(){
         var place = autocomplete.getPlace();
         lat = place.geometry.location.lat();
         lng = place.geometry.location.lng();
-      }
+      } */
     </script>
     <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDyDK9r0KXoy40PuvFGW3-7bUD33Rfv-fQ&libraries=places&callback=onLoad"></script>
   </body>
