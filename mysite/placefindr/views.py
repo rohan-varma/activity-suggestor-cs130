@@ -89,7 +89,8 @@ def suggest(request):
     assert len(places_result.raw_response['results']) <= 15, "houston we have a problem"
     name_to_place = {}
     ### MAKE IT 15
-
+    if not google_places:
+        print('WARNING: No places returned!')
     for place in google_places:
         place.get_details()
         name_to_place[place.details['name']] = place
@@ -102,11 +103,11 @@ def suggest(request):
         place['phone'] = phone
 
 
-    example_place = google_places[len(google_places)-1]
-    example_place.get_details() # makes another api call
-    places_result.raw_response['results'][0]['hi'] = 420
+    example_place = google_places[len(google_places)-1] if google_places else None
+    if example_place:
+        example_place.get_details() # makes another api call
     rp = RecommendedPlace(place_name = 'Place1', place_ranking = 5, num_times_shared = 0)
-    rp.save()
+    rp.save()   
     #places_result.raw_response['results'] is a list where each element is a dict describing the place
     # match on that
     context = {
