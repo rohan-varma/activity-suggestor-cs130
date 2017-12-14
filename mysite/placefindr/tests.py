@@ -18,9 +18,17 @@ class HelperTests(TestCase):
         assert get_types_from_request(test_query_dict) == []
 
     def test_get_radius_from_request(self):
+        test_query_dict = {'location': 'West Hollywood, CA, United States', 'open': 'true', 'radius': '10'}
+        radius = get_radius_from_request(test_query_dict)
+        assert radius == 10*1609.344, "radius is actually {}".format(radius)
+        del test_query_dict['radius']
+        radius = get_radius_from_request(test_query_dict)
+        assert radius == 8000, "radius is actually {}".format(radius)
+
+    def test_radius_cap(self):
         test_query_dict = {'location': 'West Hollywood, CA, United States', 'open': 'true', 'radius': '50'}
         radius = get_radius_from_request(test_query_dict)
-        assert radius == 50, "radius is actually {}".format(radius)
+        assert radius == 50000, "radius is actually {}".format(radius)
         del test_query_dict['radius']
         radius = get_radius_from_request(test_query_dict)
         assert radius == 8000, "radius is actually {}".format(radius)

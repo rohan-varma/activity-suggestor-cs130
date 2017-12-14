@@ -15,7 +15,6 @@ from django.template import loader
 # import .sharer
 from .place_recommender import PlaceRecommender
 
-MILES_TO_METERS_CONVERSTION_CONSTANT = 1609.344
 # Create your views here.
 
 def index(request):
