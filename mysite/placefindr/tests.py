@@ -6,6 +6,30 @@ from django.test import TestCase
 from .place_recommender import PlaceRecommender
 
 from .helpers import get_types_from_request, get_radius_from_request
+import requests
+import json
+import random
+import string
+
+class APITests(TestCase):
+    def test_basic_call(TestCase):
+        data = {
+        'location': 'UCLA',
+        'radius': 5000,
+        }
+        print(data)
+        res = requests.get('http://localhost:8000/api/suggest/', params = data)
+        assert res.status_code == 200
+
+def test_type_input(TestCase):
+    data = {
+        'location': 'UCLA',
+        'radius': 5000,
+        'types': 'bakery, bank'
+        }
+    print(data)
+    res = requests.get('http://localhost:8000/api/suggest/', params = data)
+    assert res.status_code == 200
 
 class HelperTests(TestCase):
 
@@ -66,11 +90,3 @@ class PlaceRecommenderTests(TestCase):
         results = response.raw_response['results']
         places = response.places
         assert len(results) == len(places)
-
-class RecommenderViewTests(TestCase):
-
-    def test_throws_404_if_no_location(self):
-        pass
-
-    def test_gets_json_from_location_and_token(self):
-        pass

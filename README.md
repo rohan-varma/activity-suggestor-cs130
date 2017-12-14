@@ -25,6 +25,10 @@ Run `python mysite/manage.py runserver` to start server. In order to run tests, 
 | `mysite/static/` | main UI + static assets <br/>`splash.html`: landing page <br/> `index.html`: results page <br/>`client.js`: frontend script <br/> `styles.css`: styles |
 
 
+### Run The Tests
+
+`cd` into `mysite` and run `python3 manage.py test`
+
 ## Features & Web Interface
 
 Main areas of functionality
