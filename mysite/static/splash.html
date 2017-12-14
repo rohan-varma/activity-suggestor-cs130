@@ -15,7 +15,7 @@
     <link rel="stylesheet" type="text/css" href="/static/fonts/ITCAvantGardeStd.css"/>
     <script type="text/javascript" src="static/client.js"></script>
   </head>
-  <body onload="onLoad()">
+  <body>
     <p id="title">
       <img id="icon" src="/static/images/icon.png"/>
       PlaceFindr
@@ -79,6 +79,8 @@
       </div>
     </form>
     <script>
+      var autocomplete;
+      var mapService;
       function onLoad() {
         var params = decodeQueryData(getUrlQueryString());
         if (params.noheader == "1")
@@ -88,13 +90,28 @@
           document.getElementById("showMapBtnDiv").style.display = "none";
           //TODO| check sessionStorage
         }
+
+        autocomplete = new google.maps.places.Autocomplete(
+          (document.getElementById('locationInput')),
+          //{types: ['address']}
+        );
+        autocomplete.addListener('place_changed', getLatLng);
       }
       function showResults() {
         window.top.location.href = getResultsPageUrl(getUserInput());
       }
       function showMap() {
         //TODO| redirect to map page while preserving input fields via sessionStorage
+
+        window.top.location.href = getResultsPageUrl({});
+      }
+
+      function getLatLng(){
+        var place = autocomplete.getPlace();
+        lat = place.geometry.location.lat();
+        lng = place.geometry.location.lng();
       }
     </script>
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDyDK9r0KXoy40PuvFGW3-7bUD33Rfv-fQ&libraries=places&callback=onLoad"></script>
   </body>
 </html>

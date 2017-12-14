@@ -205,7 +205,6 @@ function onSuggestionResultsLoad(req) {
       }
       else
         showNext(); // from -1 to 0
-      }
     }
     else {
       document.getElementById("???").innerHTML = "ERROR: failed to retrieve data\n(" + req.status + ")";
