@@ -8,13 +8,13 @@ from urllib.parse import parse_qsl
 import json
 import urllib   
 from .models import RecommendedPlace
+from .helpers import get_types_from_request, get_radius_from_request
 from random import shuffle
 from django.template import loader
 
 # import .sharer
 from .place_recommender import PlaceRecommender
 
-MILES_TO_METERS_CONVERSTION_CONSTANT = 1609.344
 # Create your views here.
 
 def index(request):
@@ -41,35 +41,6 @@ def share(request, sharing_method):
     except:
         return HttpResponseBadRequest('')
 
-
-def get_types_from_request(query_dict):
-    if 'types' not in query_dict:
-        return []
-    li = query_dict['types'].split(',')
-    return [s.strip() for s in li]
-
-def get_radius_from_request(query_dict):
-    if 'radius' not in query_dict:
-        return 8000 # 5 miles
-    try:
-        radius = int(query_dict['radius'])
-        return radius
-    except ValueError:
-        return 8000 # 5 miles
-
-def get_radius(query_dict):
-    if 'radius' not in query_dict:
-        return 8000 # 5 miles
-    try:
-        radius = int(query_dict['radius'])
-        # convert it to meters
-        radius*=MILES_TO_METERS_CONVERSTION_CONSTANT
-        # the wrapper caps it to 50000
-        radius = min(50000, radius)
-        return radius
-    except ValueError:
-        return 8000
-
 def suggest(request):
     """
     Generates a JSON HttpResponse for a reqest for nearby places.
@@ -85,7 +56,7 @@ def suggest(request):
         if 'location' not in query_dict:
             raise Http404('No location input.')
         location = query_dict['location']
-        radius = get_radius(query_dict)
+        radius = get_radius_from_request(query_dict)
         types = get_types_from_request(query_dict)
         print('searching with loc {} radius {} and type {}'.format(location, radius, types))
         places_result = recommender.get_places(location=location,

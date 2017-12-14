@@ -21,6 +21,8 @@ class PlaceRecommender:
                           search. Will ignore other parameters if used.
         :return: GooglePlacesSearchResult containing the search results
         """
+        print('locations are {} {} {} {}'.format(location, radius, types, pagetoken))
+        radius = 8000 if radius is None else radius # rm this line for a mutation
         return self.google_places.nearby_search(location=location,
                                                 radius=radius,
                                                 types=types,
