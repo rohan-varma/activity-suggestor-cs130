@@ -81,14 +81,27 @@ def suggest(request):
 
     template = loader.get_template('placefindr/index.html')
     #raw_response = json.dumps(places.raw_response)
-    print('RAW RESPONSE FOLLOWS')
-    print(places_result.raw_response)
-    google_places = places_result.places
-    print(len(google_places))
+    # the important things are places_result.raw_response and places_result.places
+    google_places = places_result.places[:15 if 15 < len(places_result.places) else len(places_result.places)]
+    places_result.raw_response['results'] = places_result.raw_response['results'][:15 if 15 < len(places_result.raw_response['results']) else len(places_result.raw_response['results'])]
+    assert len(google_places) <= 15, "houston we have a problem"
+    assert len(places_result.raw_response['results']) <= 15, "houston we have a problem"
+    name_to_place = {}
+    ### MAKE IT 15
+
+    for place in google_places:
+        place.get_details()
+        name_to_place[place.details['name']] = place
+    for place in places_result.raw_response['results']:
+        addr = name_to_place[place['name']].formatted_address
+        place['formatted_address'] = addr
+
     example_place = google_places[len(google_places)-1]
     example_place.get_details() # makes another api call
-    print('the shitty formatted address')
-    print(example_place.formatted_address)
+    places_result.raw_response['results'][0]['hi'] = 420
+
+    #places_result.raw_response['results'] is a list where each element is a dict describing the place
+    # match on that
     context = {
         #'raw_response': JsonResponse(places.raw_response)
         #'raw_response': d,
