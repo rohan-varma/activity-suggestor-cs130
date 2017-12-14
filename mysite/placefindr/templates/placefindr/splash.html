@@ -36,7 +36,7 @@
         padding: 10px;
     }
     .dropdown {
-        padding-right: 62px;
+        padding-right: 100px;
     }
 
     </style>
@@ -61,13 +61,14 @@
 
     <div class = "dropdown">
       <span id = "enttTitle">Type of Entertainment:</span>
-      <select id="entertainment" class="filterOpt">
-        <option value="all">All</option>
-        <option value="group">For groups</option>
-        <option value="date">For a date</option>
-        <option value="single">For yourself</option>
-      </select>
+        <select id="entertainment" class="filterOpt">
+          <option value="all">All</option>
+          <option value="group">For groups</option>
+          <option value="date">For a date</option>
+          <option value="single">For yourself</option>
+        </select>
       <br></br>
+    </div>
 
       <span id = "distTitle">Max Distance:</span>
       <select id="distanceSelect" class="filterOpt">
@@ -77,12 +78,6 @@
       </select>
       <br></br>
 
-      <span id = "hoursTitle">Open:</span>
-      <select id="hoursSelect" class="filterOpt">
-        <option value="now">Now</option>
-        <option value="anytime">Anytime</option>
-      </select>
-      <br></br>
     </div>
     <input value="Search" type="button" onclick="constructUrl()">
 
@@ -123,6 +118,52 @@
         ret.push(encodeURIComponent(d) + '=' + encodeURIComponent(data[d]));
       return ret.join('&');
     }
+
+    function isChecked(id){
+      if(document.getElementById(id).checked == true){
+        return true;
+      }
+      else{
+        return false;
+      }
+    }
+
+    function allTypeString(){
+      var string = "&types=bar,amusement_park,shopping_mall,park,movie_theater,bowling_alley,casino,campground,clothing_store,cafe,department_store,";
+      string += "movie_theater,movie_rental,park,restaurant,shopping_mall,zoo,library,night_club";
+    }
+
+    function groupTypeString(){
+      var string = "&types=bar,amusement_park,shopping_mall,park,movie_theater,bowling_alley,casino,campground,clothing_store,department_store,";
+      string += "movie_theater,movie_rental,park,restaurant,shopping_mall,zoo";
+      return string;
+    }
+
+    function dateTypeString(){
+      var string = "&types=amusement_park,bowling_alley,cafe,campground,movie_theater,night_club,park,restaurant,shopping_mall,zoo";
+      return string;
+    }
+
+    function singleTypeString(){
+      var string = "&types=amusement_park,cafe,campground,casino,clothing_store,department_store,library,movie_theater,movie_rental,night_club,park,restaurant,shopping_mall,zoo";
+      return string;
+    }
+
+    function getTypesString(choice){
+      if(choice == "single"){
+        return singleTypeString();
+      }
+      else if(choice == "group"){
+        return groupTypeString();
+      }
+      else if(choice == "date"){
+        return dateTypeString();
+      }
+      else{
+        return allTypeString();
+      }
+    }
+
     function constructUrl(){
       var pathArray = location.href.split( '/' );
       var protocol = pathArray[0];
@@ -138,6 +179,9 @@
             url += document.getElementById("distanceSelect").value;
             url +="&open=true"
        }
+       var entertainment = document.getElementById("entertainment");
+       var entertainmentchoice = entertainment.options[entertainment.selectedIndex].value;
+       url += getTypesString(entertainmentchoice);
        location.href = encodeURI(url);
      }
      else{

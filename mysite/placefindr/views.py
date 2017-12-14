@@ -94,7 +94,12 @@ def suggest(request):
         name_to_place[place.details['name']] = place
     for place in places_result.raw_response['results']:
         addr = name_to_place[place['name']].formatted_address
+        rating = name_to_place[place['name']].rating
+        phone = name_to_place[place['name']].local_phone_number
         place['formatted_address'] = addr
+        place['rating'] = rating
+        place['phone'] = phone
+
 
     example_place = google_places[len(google_places)-1]
     example_place.get_details() # makes another api call
