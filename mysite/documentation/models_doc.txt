@@ -1,0 +1,24 @@
+Help on module models:
+
+NAME
+    models - Models defines our models.
+
+FILE
+    /Users/rohan/Desktop/activity-suggestor/mysite/placefindr/models.py
+
+CLASSES
+    RecommendedPlace
+    
+    class RecommendedPlace
+     |  RecommendedPlace is a model for our recommended places.
+     |  
+     |  Methods defined here:
+     |  
+     |  __str__(self)
+     |      __str__ gives a string representation of our place
+     |      :return: String representation of the model
+
+DATA
+    unicode_literals = _Feature((2, 6, 0, 'alpha', 2), (3, 0, 0, 'alpha', ...
+
+

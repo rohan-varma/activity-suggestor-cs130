@@ -1,0 +1,17 @@
+Help on module views:
+
+NAME
+    views - Views creates and manages all of our views.
+
+FILE
+    /Users/rohan/Desktop/activity-suggestor/mysite/placefindr/views.py
+
+FUNCTIONS
+    index(request)
+    
+    share(request, sharing_method)
+    
+    suggest(request)
+        Generates a JSON HttpResponse for a reqest for nearby places.
+
+

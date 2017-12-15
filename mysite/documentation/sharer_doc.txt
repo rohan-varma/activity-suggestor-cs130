@@ -1,0 +1,20 @@
+Help on module sharer:
+
+NAME
+    sharer - Sharer allows for sharing via email or text
+
+FILE
+    /Users/rohan/Desktop/activity-suggestor/mysite/placefindr/sharer.py
+
+FUNCTIONS
+    share_via_email(to_addr, place_id)
+        share_via_emails allows sharing via email
+        :param to_addr: the address of the user being emailed
+        :param place_id: the ID of the place being shared
+    
+    share_via_text(to_number, place_id)
+        share_via_text allows sharing via text
+        :param to_number: the number of the user being shared to
+        :param place_id: the id of the place being shared
+
+

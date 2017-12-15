@@ -104,7 +104,9 @@
         header.innerHTML = "How about: ";
         var locationTitle = document.createElement('p');
         locationTitle.innerHTML = names[destIndex];
+        locationTitle.id = 'location-title';
         var address = document.createElement('p');
+        address.id = "address_field";
         address.innerHTML = formatted_addresses[destIndex];
         var rating = document.createElement('p');
         rating.innerHTML = "Rating: " + ratings[destIndex];
@@ -120,9 +122,23 @@
         signInOrOut.style.marginLeft = '25px';
 
         var createEvent = document.createElement('button');
-        revokeAccess.id = 'create-event-button';
-        revokeAccess.innerHTML = 'Share With Friends: Create GCal Event';
-        revokeAccess.style.display = 'none'
+        createEvent.id = 'create-event-button';
+        createEvent.innerHTML = 'Create GCal Event';
+        createEvent.style.display = 'none'
+
+        var linebreak = document.createElement('br');
+
+        var emailInput = document.createElement('input');
+        emailInput.type = 'text';
+        emailInput.id = 'emails';
+        emailInput.placeholder = 'input attendee email';
+        emailInput.style.display = 'none';
+
+
+        var pre = document.createElement('pre');
+        pre.id = 'content';
+
+
 
         var br = document.createElement("br");
         controlUI.appendChild(header);
@@ -131,15 +147,18 @@
         controlUI.appendChild(rating);
         controlUI.appendChild(phone);
         controlUI.appendChild(br);
-        controlUI.appendChild(share);
+        //controlUI.appendChild(share);
         controlUI.appendChild(signInOrOut);
         controlUI.appendChild(createEvent);
+        controlUI.appendChild(linebreak);
+        controlUI.appendChild(emailInput);
+        controlUI.appendChild(pre);
         controlDiv.appendChild(controlUI);
 
 
         controlUI.addEventListener('click', function() {
           //go to next destination in array
-          map.setCenter(chicago);
+          //map.setCenter(chicago);
         });
       }
 
@@ -273,11 +292,15 @@
         if (isAuthorized) {
           $('#sign-in-or-out-button').html('Sign out');
           $('#create-event-button').css('display', 'inline-block');
+          $('#emails').css('display', 'inline-block');
+
           $('#auth-status').html('You are currently signed in and have granted ' +
               'access to this app.');
         } else {
           $('#sign-in-or-out-button').html('Share With Friends!');
           $('#create-event-button').css('display', 'none');
+          $('#emails').css('display', 'none');
+
           $('#auth-status').html('You have not authorized this app or you are ' +
               'signed out.');
         }
@@ -287,25 +310,40 @@
         setSigninStatus();
       }
 
+      function appendPre(message) {
+        var pre = document.getElementById('content');
+        var textContent = document.createTextNode(message + '\n');
+        pre.appendChild(textContent);
+      }
+
       function createEvent(){
+        var address = document.getElementById('address_field');
+        var location_address = address.innerHTML;
+        var location_title = document.getElementById('location-title');
+        var eventTitle = "Event: " + location_title.innerHTML;
+        var current_date = new Date();
+        var start_date = current_date.getFullYear() + '-' + (current_date.getMonth() + 1) + '-' + current_date.getDate();
+        var tomorrow = new Date();
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        var end_date = tomorrow.getFullYear() + '-' + (tomorrow.getMonth() + 1) + '-' + tomorrow.getDate();
+
+        var emails = document.getElementById('emails');
+        var email_address = emails.value;
         var event = {
-          'summary': 'Google I/O 2015',
-          'location': '800 Howard St., San Francisco, CA 94103',
-          'description': 'A chance to hear more about Google\'s developer products.',
+          'summary': eventTitle,
+          'location': location_address,
+          'description': 'Suggested by PlaceFindr!',
           'start': {
-            'dateTime': '2015-05-28T09:00:00-07:00',
-            'timeZone': 'America/Los_Angeles'
+            'date': start_date,
           },
           'end': {
-            'dateTime': '2015-05-28T17:00:00-07:00',
-            'timeZone': 'America/Los_Angeles'
+            'date': end_date,
           },
           'recurrence': [
             'RRULE:FREQ=DAILY;COUNT=2'
           ],
           'attendees': [
-            {'email': 'lpage@example.com'},
-            {'email': 'sbrin@example.com'}
+            {'email': email_address}
           ],
           'reminders': {
             'useDefault': false,
@@ -318,11 +356,12 @@
 
         var request = gapi.client.calendar.events.insert({
           'calendarId': 'primary',
-          'resource': event
+          'resource': event,
+          'sendNotifications': true
         });
 
         request.execute(function(event) {
-          appendPre('Event created: ' + event.htmlLink);
+          appendPre('Event created!');
         });
       }
 

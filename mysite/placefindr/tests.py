@@ -1,3 +1,6 @@
+"""
+tests tests all of our code
+"""
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
@@ -12,7 +15,13 @@ import random
 import string
 
 class APITests(TestCase):
+    """
+    APITests are our integration tests for our backend APIs
+    """
     def test_basic_call(self):
+        """
+        test_basic_call tests a call with location and radius parameters, but no place types.
+        """
         data = {
         'location': 'UCLA',
         'radius': 5000,
@@ -22,6 +31,9 @@ class APITests(TestCase):
         assert res.status_code == 200
 
 def test_type_input(self):
+    """
+    test_type_input tests a call with location, types, and radius parameters
+    """
     data = {
         'location': 'UCLA',
         'radius': 5000,
@@ -32,6 +44,9 @@ def test_type_input(self):
     assert res.status_code == 200
 
 def test_convert_radius(TestCase):
+    """
+    test_convert_radius tests that a radius can be converted, even if it is over capacity
+    """
     data = {
         'location': 'UCLA',
         'radius': '999999999',
@@ -41,6 +56,9 @@ def test_convert_radius(TestCase):
     assert res.status_code == 200    
 
 def test_fail_loc(TestCase):
+    """
+    test_fail_loc tests that the call fails if no location is provided
+    """
     data = {
         'location': 'UCLA',
         'radius': 5000,
@@ -52,8 +70,13 @@ def test_fail_loc(TestCase):
 
 
 class HelperTests(TestCase):
-
+    """
+    HelperTests tests our helper functions
+    """
     def test_get_types_from_request(self):
+        """
+        test_get_types_from_request tests that we can extract a list of types from a request
+        """
         test_query_dict = {'location': 'West Hollywood, CA, United States', 'open': 'true', 'radius': '50', 'types': 'amusement_park,cafe,campground,casino,clothing_store,department_store,library,movie_theater,movie_rental,night_club,park,restaurant,shopping_mall,zoo'}
         types = get_types_from_request(test_query_dict)
         assert isinstance(types, list)
@@ -62,6 +85,9 @@ class HelperTests(TestCase):
         assert get_types_from_request(test_query_dict) == []
 
     def test_get_radius_from_request(self):
+        """
+        test_get_radius_from_request tests if we can get the radius from a request
+        """
         test_query_dict = {'location': 'West Hollywood, CA, United States', 'open': 'true', 'radius': '10'}
         radius = get_radius_from_request(test_query_dict)
         assert radius == 10*1609.344, "radius is actually {}".format(radius)
@@ -70,6 +96,9 @@ class HelperTests(TestCase):
         assert radius == 8000, "radius is actually {}".format(radius)
 
     def test_radius_cap(self):
+        """
+        test_radius_cap tests that if the radius provided is over capacity, we cap it at 50,000m
+        """
         test_query_dict = {'location': 'West Hollywood, CA, United States', 'open': 'true', 'radius': '50'}
         radius = get_radius_from_request(test_query_dict)
         assert radius == 50000, "radius is actually {}".format(radius)
@@ -78,7 +107,9 @@ class HelperTests(TestCase):
         assert radius == 8000, "radius is actually {}".format(radius)
 
 class PlaceRecommenderTests(TestCase):
-
+    """
+    PlaceRecommenderTests enumerates test cases for our place recommender
+    """
     def test_gets_location_results_from_location_and_token(self):
         recommender = PlaceRecommender()
         response = recommender.get_places(location="UCLA West Hollywood, CA, United States", radius = int('8000'), types = ['amusement_park', 'bowling_alley', 'cafe', 'campground', 'movie_theater', 'night_club', 'park', 'restaurant', 'shopping_mall', 'zoo'])

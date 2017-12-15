@@ -1,0 +1,31 @@
+Help on module place_recommender:
+
+NAME
+    place_recommender - place_recommender defines a PlaceRecommender object that lets users get recommended places
+
+FILE
+    /Users/rohan/Desktop/activity-suggestor/mysite/placefindr/place_recommender.py
+
+CLASSES
+    PlaceRecommender
+    
+    class PlaceRecommender
+     |  Class responsible for grabbing the place recommendations.
+     |  
+     |  Methods defined here:
+     |  
+     |  __init__(self)
+     |      init initializes an instance of PlaceRecommender
+     |  
+     |  get_places(self, location=None, radius=None, types=None, pagetoken=None)
+     |      Get places based on a location, radius, and a list of place types.
+     |      
+     |      :param location: String of the search location.
+     |      :param radius: Radius from the search location.
+     |      :param types: List of type strings supported by the Google Places api
+     |                    suported types.
+     |      :param pagetoken: pagetoken used to get more results from a previous
+     |                        search. Will ignore other parameters if used.
+     |      :return: GooglePlacesSearchResult containing the search results
+
+
