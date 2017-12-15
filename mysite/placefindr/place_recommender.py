@@ -26,4 +26,4 @@ class PlaceRecommender:
         return self.google_places.nearby_search(location=location,
                                                 radius=radius,
                                                 types=types,
-                                                pagetoken=pagetoken)
+                                                )
