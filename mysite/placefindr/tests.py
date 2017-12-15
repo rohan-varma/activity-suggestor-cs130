@@ -94,6 +94,14 @@ class PlaceRecommenderTests(TestCase):
         except TypeError:
             pass # we should err when radius wasn't parse
 
+    def test_no_location_failure(self):
+        recommender = PlaceRecommender()
+        try:
+            response = recommender.get_places(radius = '8000', types = ['amusement_park', 'bowling_alley', 'cafe', 'campground', 'movie_theater', 'night_club', 'park', 'restaurant', 'shopping_mall', 'zoo'])
+            assert 1 == 2 # we should fail before we get here
+        except ValueError:
+            pass # we should err when no loc is specified
+
 ### Example of a mutation test, if you take out line 25 in place_recommender.py then this test will break
     def test_radius_empty(self):
         # if the user did not specify any radius, a sensible default option should be used, and it should not error out
