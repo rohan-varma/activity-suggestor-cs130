@@ -48,7 +48,6 @@ URLs
 | URL | description |
 | ---- | ----------- |
 | `/` | directs to splash page |
-| Endpoints | description |
 | '/api/suggest/' | suggestion end point (only reachable from splash page) |
 
 ## Usage
