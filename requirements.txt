@@ -1,0 +1,13 @@
+appdirs==1.4.3
+Django==2.0
+Pygments==2.2.0
+PyJWT==1.5.3
+pyparsing==2.2.0
+PySocks==1.6.7
+python-dateutil==2.6.0
+python-google-places==1.4.1
+twilio==6.8.4
+Twisted==17.1.0
+txaio==2.6.2
+tzlocal==1.4
+ujson==1.35
