@@ -20,9 +20,9 @@ Run `python mysite/manage.py runserver` to start server. In order to run tests, 
 | `requirements.txt` | list of pip package dependencies |
 | `mysite/manage.py` | django management script |
 | `mysite/mysite/` | django root (entry point) directory (which confusingly has the same name as the workspace root) |
-| `mysite/placefindr/` | main backend <br/>`urls.py`: URL dispatch conf for backend services <br/>`views.py`: main dispatcher for backend "views" <br/>`place_recommender.py`: the location suggestor module <br/>`sharer.py`: the sharing module <br/>`settings.py`: python file loaded by the main django `settings.py`, contains backend settings and API keys |
+| `mysite/placefindr/` | main backend <br/>`urls.py`: URL dispatch conf for backend services <br/>`views.py`: main dispatcher for backend "views" <br/>`place_recommender.py`: the location suggestor module <br/>`sharer.py`: the sharing module <br/>`settings.py`: python file loaded by the main django `settings.py`, contains backend settings and API keys <br> main front end <br> 'templates': directory contains django front-end templating logic |
+| `mysite/placefindr/templates` | main UI <br/>`splash.html`: landing page <br/> `index.html`: map view|
 | `mysite/placefindr/tests.py` | tests for backend |
-| `mysite/static/` | main UI + static assets <br/>`splash.html`: landing page <br/> `index.html`: results page <br/>`client.js`: frontend script <br/> `styles.css`: styles |
 
 
 ### Run The Tests
@@ -34,31 +34,27 @@ Run `python mysite/manage.py runserver` to start server. In order to run tests, 
 Main areas of functionality
 
 * main UI
-    * JS geolocation [optional]
+    * Splash Page: Entry point into app. Configure location preferences. 
+    * Map View: Displays location information as well as ability to toggle through places. 
     * Google Maps embed, both for choosing a location & displaying suggestions
-    * Facebook, Google Calendar sharing
-    * Geocoding (might not be necessary)
-* places service (JSON service serving data from Places, etc.)
-    * Google Places API; Yelp API
+    * Google Calendar sharing
+* places service (HTTP service serving data from Places, etc.)
+    * Google Places API;
 * sharing service
-    * Emailing (emails are sent from a service account)
-* UI for user feed & profile [optional]
-* service for user profiles [optional]
-* 
+    * Google Calendar
 
 URLs
 
 | URL | description |
 | ---- | ----------- |
-| `/` | redirects to `/splash` |
-| `/splash` | the splash page, where the user is prompted for a start location & search parameters |
-| `/main` (no parameters) | the start page (splash page with embedded map for choosing the start location) |
-| `/main?<...>` | the results page, showing location suggestions on Google Maps |
-| `/api/suggest/?<...>` | the suggestion service; returns suggestions in JSON format |
-| `/api/share/<...>/?<...>` | the sharing service; sends message containing Google Maps link to specified email address or phone number <br/>no user authentication is currently enforced |
+| `/` | directs to splash page |
+| Endpoints | description |
+| '/api/suggest/' | suggestion end point (only reachable from splash page) |
 
+## Usage
 
-## Implementation & Documentation
+Splash Page - Provide location of interest (autocomplete), entertainment type (tailored by group size), and radius. On submit, routed to main map view. <br>
+Map View - Toggle through possible locations by clicking 'Try Somewhere Else'. Share location with friends by clicking share with friends button. Optionally redefine parameters by clicking 'Go Back'.
 
 
 
