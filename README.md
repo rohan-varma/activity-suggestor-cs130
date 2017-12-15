@@ -39,7 +39,7 @@ Main areas of functionality
     * Google Maps embed, both for choosing a location & displaying suggestions
     * Google Calendar sharing
 * places service (HTTP service serving data from Places, etc.)
-    * Google Places API;
+    * Google Places API
 * sharing service
     * Google Calendar
 
