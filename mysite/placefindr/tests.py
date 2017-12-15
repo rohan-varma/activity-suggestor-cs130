@@ -12,7 +12,7 @@ import random
 import string
 
 class APITests(TestCase):
-    def test_basic_call(TestCase):
+    def test_basic_call(self):
         data = {
         'location': 'UCLA',
         'radius': 5000,
@@ -21,7 +21,7 @@ class APITests(TestCase):
         res = requests.get('http://localhost:8000/api/suggest/', params = data)
         assert res.status_code == 200
 
-def test_type_input(TestCase):
+def test_type_input(self):
     data = {
         'location': 'UCLA',
         'radius': 5000,
@@ -30,6 +30,26 @@ def test_type_input(TestCase):
     print(data)
     res = requests.get('http://localhost:8000/api/suggest/', params = data)
     assert res.status_code == 200
+
+def test_convert_radius(TestCase):
+    data = {
+        'location': 'UCLA',
+        'radius': '999999999',
+        'types': 'bakery, bank'
+            }
+    res = requests.get('http://localhost:8000/api/suggest/', params = data)
+    assert res.status_code == 200    
+
+def test_fail_loc(TestCase):
+    data = {
+        'location': 'UCLA',
+        'radius': 5000,
+        'types': 'bakery, bank'
+        }
+    del data[location]
+    res = requests.get('http://localhost:8000/api/suggest/', params = data)
+    assert res.status_code != 200
+
 
 class HelperTests(TestCase):
 
