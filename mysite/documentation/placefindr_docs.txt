@@ -1,0 +1,22 @@
+Help on package placefindr:
+
+NAME
+    placefindr
+
+FILE
+    /Users/rohan/Desktop/activity-suggestor/mysite/placefindr/__init__.py
+
+PACKAGE CONTENTS
+    admin
+    apps
+    helpers
+    migrations (package)
+    models
+    place_recommender
+    settings
+    sharer
+    tests
+    urls
+    views
+
+
