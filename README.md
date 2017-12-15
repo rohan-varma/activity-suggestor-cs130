@@ -5,11 +5,17 @@ Location suggestor built for CS 130 by Elizabeth Muenchow, John Song, Aravind Sr
 [See this page on GitHub](https://github.com/rohan-varma/activity-suggestor-cs130/blob/master/README.md)
 
 
-## Instructions
+## Installation and running instructions
 
-To install all the requirements, run `pip[3] install requirements.txt`.
+1) If you don't have Python3, install it using these instructions: http://docs.python-guide.org/en/latest/starting/install3/osx/
 
-Run `python mysite/manage.py runserver` to start server. In order to run tests, please first `cd` into the outer `mysite` directory, before running `python manage.py test`; **otherwise test discovery will fail**.
+2) Clone the repository. 
+
+3) Run `make install` to install the requirements with `pip3`. 
+
+4) Run `make server` to run the server (alternatively, navigate to the `mysite/` directory and run `python3 manage.py runserver`)
+
+5) Run `make tests` to run all of the tests (alternatively navigate to the `mysite/` directory and run `python3 manage.py test`)
 
 
 ## Workspace structure
@@ -64,12 +70,3 @@ Docs/source: https://docs.djangoproject.com/en/2.0/intro/tutorial02/#database-se
 Run migrations: python3 manage.py makemigrations placefindr
 
 View migration: python3 manage.py sqlmigrate placefindr 0001
-
-
-
-
-## Testing
-
-    ########
-    # TODO #
-    ########
