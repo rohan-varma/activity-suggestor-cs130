@@ -35,6 +35,8 @@ Location suggestor built for CS 130 by Elizabeth Muenchow, John Song, Aravind Sr
 
 `cd` into `mysite` and run `python3 manage.py test`
 
+** Note ** about testing: The API tests require the server to be up and running in order to succeed. So use 2 terminals, and start the server with one of them, and then run the tests in the other. 
+
 ## Features & Web Interface
 
 Main areas of functionality
