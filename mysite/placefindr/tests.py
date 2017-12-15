@@ -6,6 +6,50 @@ from django.test import TestCase
 from .place_recommender import PlaceRecommender
 
 from .helpers import get_types_from_request, get_radius_from_request
+import requests
+import json
+import random
+import string
+
+class APITests(TestCase):
+    def test_basic_call(self):
+        data = {
+        'location': 'UCLA',
+        'radius': 5000,
+        }
+        print(data)
+        res = requests.get('http://localhost:8000/api/suggest/', params = data)
+        assert res.status_code == 200
+
+def test_type_input(self):
+    data = {
+        'location': 'UCLA',
+        'radius': 5000,
+        'types': 'bakery, bank'
+        }
+    print(data)
+    res = requests.get('http://localhost:8000/api/suggest/', params = data)
+    assert res.status_code == 200
+
+def test_convert_radius(TestCase):
+    data = {
+        'location': 'UCLA',
+        'radius': '999999999',
+        'types': 'bakery, bank'
+            }
+    res = requests.get('http://localhost:8000/api/suggest/', params = data)
+    assert res.status_code == 200    
+
+def test_fail_loc(TestCase):
+    data = {
+        'location': 'UCLA',
+        'radius': 5000,
+        'types': 'bakery, bank'
+        }
+    del data[location]
+    res = requests.get('http://localhost:8000/api/suggest/', params = data)
+    assert res.status_code != 200
+
 
 class HelperTests(TestCase):
 
@@ -50,6 +94,14 @@ class PlaceRecommenderTests(TestCase):
         except TypeError:
             pass # we should err when radius wasn't parse
 
+    def test_no_location_failure(self):
+        recommender = PlaceRecommender()
+        try:
+            response = recommender.get_places(radius = '8000', types = ['amusement_park', 'bowling_alley', 'cafe', 'campground', 'movie_theater', 'night_club', 'park', 'restaurant', 'shopping_mall', 'zoo'])
+            assert 1 == 2 # we should fail before we get here
+        except ValueError:
+            pass # we should err when no loc is specified
+
 ### Example of a mutation test, if you take out line 25 in place_recommender.py then this test will break
     def test_radius_empty(self):
         # if the user did not specify any radius, a sensible default option should be used, and it should not error out
@@ -66,11 +118,3 @@ class PlaceRecommenderTests(TestCase):
         results = response.raw_response['results']
         places = response.places
         assert len(results) == len(places)
-
-class RecommenderViewTests(TestCase):
-
-    def test_throws_404_if_no_location(self):
-        pass
-
-    def test_gets_json_from_location_and_token(self):
-        pass
