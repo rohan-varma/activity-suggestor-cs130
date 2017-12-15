@@ -1,3 +1,6 @@
+"""
+Views creates and manages all of our views.
+"""
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 from django.shortcuts import render
@@ -7,21 +10,32 @@ from django.http import Http404 # django's http status codes
 from urllib.parse import parse_qsl
 import json
 import urllib   
-from .models import RecommendedPlace
-from .helpers import get_types_from_request, get_radius_from_request
-from random import shuffle
+from .models import RecommendedPlace #.models
+from .helpers import get_types_from_request, get_radius_from_request #.helpers
+from random import shuffle 
 from django.template import loader
 
 # import .sharer
-from .place_recommender import PlaceRecommender
+from .place_recommender import PlaceRecommender #.place_recommender
 
 # Create your views here.
 
 def index(request):
+    """
+    index fulfills requests on /
+    :param request: an HTTP request
+    :return: HttpResponse of the splash page template.
+    """
     template = loader.get_template('placefindr/splash.html')
     return HttpResponse(template.render({}, request))
 
 def share(request, sharing_method):
+    """
+    share fulfills requests on /api/share
+    :param request: an HTTP request
+    :param charing_method: a sharing method
+    :return: HttpResponse of whether the sharing request succeeding or not
+    """
     if sharing_method == 'email':
         sh = share_via_email
     elif sharing_method == 'text':
@@ -43,7 +57,9 @@ def share(request, sharing_method):
 
 def suggest(request):
     """
-    Generates a JSON HttpResponse for a reqest for nearby places.
+    suggest fulfills requests on /api/suggest
+    :param request: an HTTP request
+    :return: HttpResponse of the suggested places
     """
     print("in suggest")
     recommender = PlaceRecommender()

@@ -1,3 +1,6 @@
+"""
+place_recommender defines a PlaceRecommender object that lets users get recommended places
+"""
 from googleplaces import GooglePlaces, types, lang
 from .settings import settings
 
@@ -7,6 +10,9 @@ class PlaceRecommender:
     """
 
     def __init__(self):
+        """
+        init initializes an instance of PlaceRecommender
+        """
         self.google_places = GooglePlaces(settings.GOOGLE_API_KEY)
 
     def get_places(self, location=None, radius=None, types=None, pagetoken=None):

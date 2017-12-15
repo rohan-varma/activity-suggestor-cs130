@@ -1,0 +1,26 @@
+Help on module views:
+
+NAME
+    views - Views creates and manages all of our views.
+
+FILE
+    /Users/rohan/Desktop/activity-suggestor/mysite/placefindr/views.py
+
+FUNCTIONS
+    index(request)
+        index fulfills requests on /
+        :param request: an HTTP request
+        :return: HttpResponse of the splash page template.
+    
+    share(request, sharing_method)
+        share fulfills requests on /api/share
+        :param request: an HTTP request
+        :param charing_method: a sharing method
+        :return: HttpResponse of whether the sharing request succeeding or not
+    
+    suggest(request)
+        suggest fulfills requests on /api/suggest
+        :param request: an HTTP request
+        :return: HttpResponse of the suggested places
+
+
