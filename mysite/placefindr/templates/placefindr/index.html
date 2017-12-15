@@ -104,7 +104,9 @@
         header.innerHTML = "How about: ";
         var locationTitle = document.createElement('p');
         locationTitle.innerHTML = names[destIndex];
+        locationTitle.id = 'location-title';
         var address = document.createElement('p');
+        address.id = "address_field";
         address.innerHTML = formatted_addresses[destIndex];
         var rating = document.createElement('p');
         rating.innerHTML = "Rating: " + ratings[destIndex];
@@ -113,6 +115,31 @@
 
         var share = document.createElement('button');
         share.innerHTML = 'Share with Friends';
+
+        var signInOrOut = document.createElement('button');
+        signInOrOut.id = 'sign-in-or-out-button';
+        signInOrOut.innerHTML = 'Share With Friends!';
+        signInOrOut.style.marginLeft = '25px';
+
+        var createEvent = document.createElement('button');
+        createEvent.id = 'create-event-button';
+        createEvent.innerHTML = 'Create GCal Event';
+        createEvent.style.display = 'none'
+
+        var linebreak = document.createElement('br');
+
+        var emailInput = document.createElement('input');
+        emailInput.type = 'text';
+        emailInput.id = 'emails';
+        emailInput.placeholder = 'Input Attendee Email';
+        emailInput.style.display = 'none';
+
+
+        var pre = document.createElement('pre');
+        pre.id = 'content';
+
+
+
         var br = document.createElement("br");
         controlUI.appendChild(header);
         controlUI.appendChild(locationTitle);
@@ -120,12 +147,18 @@
         controlUI.appendChild(rating);
         controlUI.appendChild(phone);
         controlUI.appendChild(br);
-        controlUI.appendChild(share);
+        //controlUI.appendChild(share);
+        controlUI.appendChild(signInOrOut);
+        controlUI.appendChild(createEvent);
+        controlUI.appendChild(linebreak);
+        controlUI.appendChild(emailInput);
+        controlUI.appendChild(pre);
         controlDiv.appendChild(controlUI);
+
 
         controlUI.addEventListener('click', function() {
           //go to next destination in array
-          map.setCenter(chicago);
+          //map.setCenter(chicago);
         });
       }
 
@@ -146,7 +179,7 @@
       function showNext(){
         destIndex = (destIndex + 1) % lat.length;
         initMap();
-        //TODO|
+        handleClientLoad(); // load google calendar resources
       }
 
       function initMap() {
@@ -194,6 +227,152 @@
     </script>
     <script async defer
     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDyDK9r0KXoy40PuvFGW3-7bUD33Rfv-fQ&callback=initMap">
+    </script>
+    <script>
+      var GoogleAuth;
+      var SCOPE = 'https://www.googleapis.com/auth/calendar';
+      function handleClientLoad() {
+        // Load the API's client and auth2 modules.
+        // Call the initClient function after the modules load.
+        gapi.load('client:auth2', initClient);
+      }
+
+      function initClient() {
+        // Retrieve the discovery document for version 3 of Google Drive API.
+        // In practice, your app can retrieve one or more discovery documents.
+        var discoveryUrl = 'https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest';
+
+        // Initialize the gapi.client object, which app uses to make API requests.
+        // Get API key and client ID from API Console.
+        // 'scope' field specifies space-delimited list of access scopes.
+        gapi.client.init({
+            'apiKey': 'AIzaSyDyDK9r0KXoy40PuvFGW3-7bUD33Rfv-fQ',
+            'discoveryDocs': [discoveryUrl],
+            'clientId': '316940136304-uai0v9qq7vabpkfrt8noskk0f6qsid8j.apps.googleusercontent.com',
+            'scope': SCOPE
+        }).then(function () {
+          GoogleAuth = gapi.auth2.getAuthInstance();
+
+          // Listen for sign-in state changes.
+          GoogleAuth.isSignedIn.listen(updateSigninStatus);
+
+          // Handle initial sign-in state. (Determine if user is already signed in.)
+          var user = GoogleAuth.currentUser.get();
+          setSigninStatus();
+
+          // Call handleAuthClick function when user clicks on
+          //      "Sign In/Authorize" button.
+          $('#sign-in-or-out-button').click(function() {
+            handleAuthClick();
+          });
+          $('#create-event-button').click(function() {
+            //revokeAccess();
+            createEvent();
+          });
+        });
+      }
+
+      function handleAuthClick() {
+        if (GoogleAuth.isSignedIn.get()) {
+          // User is authorized and has clicked 'Sign out' button.
+          GoogleAuth.signOut();
+        } else {
+          // User is not signed in. Start Google auth flow.
+          GoogleAuth.signIn();
+        }
+      }
+
+      function revokeAccess() {
+        GoogleAuth.disconnect();
+      }
+
+      function setSigninStatus(isSignedIn) {
+        var user = GoogleAuth.currentUser.get();
+        var isAuthorized = user.hasGrantedScopes(SCOPE);
+        if (isAuthorized) {
+          $('#sign-in-or-out-button').html('Sign out');
+          $('#create-event-button').css('display', 'inline-block');
+          $('#emails').css('display', 'inline-block');
+
+          $('#auth-status').html('You are currently signed in and have granted ' +
+              'access to this app.');
+        } else {
+          $('#sign-in-or-out-button').html('Share With Friends!');
+          $('#create-event-button').css('display', 'none');
+          $('#emails').css('display', 'none');
+
+          $('#auth-status').html('You have not authorized this app or you are ' +
+              'signed out.');
+        }
+      }
+
+      function updateSigninStatus(isSignedIn) {
+        setSigninStatus();
+      }
+
+      function appendPre(message) {
+        var pre = document.getElementById('content');
+        var textContent = document.createTextNode(message + '\n');
+        pre.appendChild(textContent);
+      }
+
+      function createEvent(){
+        var address = document.getElementById('address_field');
+        var location_address = address.innerHTML;
+        var location_title = document.getElementById('location-title');
+        var eventTitle = "Event: " + location_title.innerHTML;
+        var current_date = new Date();
+        var start_date = current_date.getFullYear() + '-' + (current_date.getMonth() + 1) + '-' + current_date.getDate();
+        var tomorrow = new Date();
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        var end_date = tomorrow.getFullYear() + '-' + (tomorrow.getMonth() + 1) + '-' + tomorrow.getDate();
+
+        var emails = document.getElementById('emails');
+        var email_address = emails.value;
+        var event = {
+          'summary': eventTitle,
+          'location': location_address,
+          'description': 'Suggested by PlaceFindr!',
+          'start': {
+            'date': start_date,
+          },
+          'end': {
+            'date': end_date,
+          },
+          'recurrence': [
+            'RRULE:FREQ=DAILY;COUNT=2'
+          ],
+          'attendees': [
+            {'email': email_address}
+          ],
+          'reminders': {
+            'useDefault': false,
+            'overrides': [
+              {'method': 'email', 'minutes': 24 * 60},
+              {'method': 'popup', 'minutes': 10}
+            ]
+          }
+        };
+
+        var request = gapi.client.calendar.events.insert({
+          'calendarId': 'primary',
+          'resource': event,
+          'sendNotifications': true
+        });
+
+        request.execute(function(event) {
+          appendPre('Event created!');
+        });
+      }
+
+    </script>
+
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script async defer src="https://apis.google.com/js/api.js"
+            onload="this.onload=function(){};handleClientLoad()"
+            onreadystatechange="if (this.readyState === 'complete') this.onload()">
     </script>
   </body>
 </html>
