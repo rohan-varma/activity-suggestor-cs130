@@ -116,12 +116,12 @@
 
         var signInOrOut = document.createElement('button');
         signInOrOut.id = 'sign-in-or-out-button';
-        signInOrOut.innerHTML = 'Sign In/Authorize';
+        signInOrOut.innerHTML = 'Share With Friends!';
         signInOrOut.style.marginLeft = '25px';
 
-        var revokeAccess = document.createElement('button');
-        revokeAccess.id = 'revoke-access-button';
-        revokeAccess.innerHTML = 'Revoke access';
+        var createEvent = document.createElement('button');
+        revokeAccess.id = 'create-event-button';
+        revokeAccess.innerHTML = 'Share With Friends: Create GCal Event';
         revokeAccess.style.display = 'none'
 
         var br = document.createElement("br");
@@ -133,7 +133,7 @@
         controlUI.appendChild(br);
         controlUI.appendChild(share);
         controlUI.appendChild(signInOrOut);
-        controlUI.appendChild(revokeAccess);
+        controlUI.appendChild(createEvent);
         controlDiv.appendChild(controlUI);
 
 
@@ -246,8 +246,9 @@
           $('#sign-in-or-out-button').click(function() {
             handleAuthClick();
           });
-          $('#revoke-access-button').click(function() {
-            revokeAccess();
+          $('#create-event-button').click(function() {
+            //revokeAccess();
+            createEvent();
           });
         });
       }
@@ -271,12 +272,12 @@
         var isAuthorized = user.hasGrantedScopes(SCOPE);
         if (isAuthorized) {
           $('#sign-in-or-out-button').html('Sign out');
-          $('#revoke-access-button').css('display', 'inline-block');
+          $('#create-event-button').css('display', 'inline-block');
           $('#auth-status').html('You are currently signed in and have granted ' +
               'access to this app.');
         } else {
-          $('#sign-in-or-out-button').html('Sign In/Authorize');
-          $('#revoke-access-button').css('display', 'none');
+          $('#sign-in-or-out-button').html('Share With Friends!');
+          $('#create-event-button').css('display', 'none');
           $('#auth-status').html('You have not authorized this app or you are ' +
               'signed out.');
         }
@@ -285,6 +286,46 @@
       function updateSigninStatus(isSignedIn) {
         setSigninStatus();
       }
+
+      function createEvent(){
+        var event = {
+          'summary': 'Google I/O 2015',
+          'location': '800 Howard St., San Francisco, CA 94103',
+          'description': 'A chance to hear more about Google\'s developer products.',
+          'start': {
+            'dateTime': '2015-05-28T09:00:00-07:00',
+            'timeZone': 'America/Los_Angeles'
+          },
+          'end': {
+            'dateTime': '2015-05-28T17:00:00-07:00',
+            'timeZone': 'America/Los_Angeles'
+          },
+          'recurrence': [
+            'RRULE:FREQ=DAILY;COUNT=2'
+          ],
+          'attendees': [
+            {'email': 'lpage@example.com'},
+            {'email': 'sbrin@example.com'}
+          ],
+          'reminders': {
+            'useDefault': false,
+            'overrides': [
+              {'method': 'email', 'minutes': 24 * 60},
+              {'method': 'popup', 'minutes': 10}
+            ]
+          }
+        };
+
+        var request = gapi.client.calendar.events.insert({
+          'calendarId': 'primary',
+          'resource': event
+        });
+
+        request.execute(function(event) {
+          appendPre('Event created: ' + event.htmlLink);
+        });
+      }
+
     </script>
 
 
